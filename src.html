@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utos ni Mama RPG</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <!-- START SCREEN -->
+      <div id="screen-start" class="screen active">
+        <h1>UTOS NI MAMA</h1>
+        <p>An English-Filipino RPG Quest</p>
+        <button onclick="startGame()">START QUEST</button>
+      </div>
+
+      <!-- GAME SCREEN -->
+      <div id="screen-game" class="screen">
+        <div id="hud">
+          <span id="level-title">Quest 1</span>
+          <span id="timer" class="pulse-anim">⏳ 15s</span>
+        </div>
+
+        <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
+
+        <div id="dialog-box">
+          <p id="scenario-text">Loading...</p>
+          <p id="question-text" class="highlight"></p>
+        </div>
+
+        <!-- Dynamic Controls -->
+        <div id="options-container"></div>
+        <div id="input-container" style="display: none">
+          <input
+            type="text"
+            id="spelling-input"
+            placeholder="Type here..."
+            autocomplete="off"
+          />
+          <button onclick="checkSpelling()">SUBMIT</button>
+        </div>
+      </div>
+
+      <!-- GAME OVER SCREEN (OR ELSE...) -->
+      <div id="screen-gameover" class="screen">
+        <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
+        <p id="gameover-reason"></p>
+        <button onclick="resetGame()">TRY AGAIN</button>
+      </div>
+
+      <!-- VICTORY SCREEN -->
+      <div id="screen-victory" class="screen">
+        <h1>GOOD JOB, ANAK!</h1>
+        <p>You survived Mama's tasks.</p>
+        <button onclick="resetGame()">PLAY AGAIN</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
