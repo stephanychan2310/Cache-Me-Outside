@@ -8,13 +8,11 @@ body {
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  /* Added padding so it doesn't touch the edges on mobile */
   padding: 1rem;
   box-sizing: border-box;
 }
 
 #game-container {
-  /* Changed from fixed 800x600 to responsive dimensions */
   width: 100%;
   max-width: 800px;
   min-height: 600px;
@@ -23,7 +21,6 @@ body {
   box-shadow: 10px 10px 0px #000000;
   position: relative;
   text-align: center;
-  /* Allow internal elements to dictate height if needed */
   display: flex;
   flex-direction: column;
 }
@@ -34,7 +31,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1; /* Allows the screen to fill the container */
+  flex-grow: 1;
   box-sizing: border-box;
 }
 
@@ -46,7 +43,7 @@ h1 {
   color: #f1c40f;
   text-shadow: 4px 4px #d35400;
   line-height: 1.5;
-  font-size: 2rem; /* Adjusted for better fit */
+  font-size: 2rem;
   margin-bottom: 1rem;
 }
 
@@ -59,7 +56,7 @@ h1 {
   justify-content: space-between;
   width: 100%;
   margin-bottom: 1.5rem;
-  font-size: 1rem; /* Scaled down slightly */
+  font-size: 1rem;
   color: #e74c3c;
 }
 
@@ -67,7 +64,7 @@ button {
   background-color: #d35400;
   color: white;
   font-family: "Press Start 2P", cursive;
-  font-size: 0.8rem; /* Scaled down to prevent text overflow */
+  font-size: 0.8rem;
   line-height: 1.5;
   border: 4px solid #ffffff;
   padding: 1rem;
@@ -104,10 +101,10 @@ input[type="text"] {
   border: 4px solid #ffffff;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  width: 100%; /* Changed to 100% of its flex container */
+  width: 100%;
   box-sizing: border-box;
   line-height: 1.6;
-  font-size: 0.8rem; /* Critical fix: Pixel fonts need smaller default sizes */
+  font-size: 0.8rem;
 }
 
 #scenario-text {
@@ -191,4 +188,51 @@ input[type="text"] {
     padding: 0.8rem;
     width: 100%;
   }
+}
+
+/* --- NEW MENU STYLES --- */
+#quest-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.quest-btn {
+  font-size: 0.7rem;
+  padding: 1rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #27ae60;
+}
+
+.quest-btn:hover {
+  background-color: #2ecc71;
+}
+
+.quest-sprite {
+  font-size: 1.5rem;
+}
+
+.back-btn {
+  background-color: #7f8c8d;
+}
+
+.back-btn:hover {
+  background-color: #95a5a6;
+}
+
+#flee-btn {
+  padding: 0.5rem;
+  font-size: 0.6rem;
+  margin: 0;
+  background-color: #c0392b;
+}
+
+#flee-btn:hover {
+  background-color: #e74c3c;
 }

@@ -16,7 +16,15 @@
       <div id="screen-start" class="screen active">
         <h1>UTOS NI MAMA</h1>
         <p>An English-Filipino RPG Quest</p>
-        <button onclick="startGame()">START QUEST</button>
+        <button onclick="openMenu()">START QUEST</button>
+      </div>
+
+      <!-- LEVEL SELECT MENU (NEW) -->
+      <div id="screen-menu" class="screen">
+        <h1>MGA UTOS</h1>
+        <p>Choose a task from Mama:</p>
+        <div id="quest-grid"></div>
+        <button onclick="resetToStart()" class="back-btn">BACK TO TITLE</button>
       </div>
 
       <!-- GAME SCREEN -->
@@ -24,6 +32,7 @@
         <div id="hud">
           <span id="level-title">Quest 1</span>
           <span id="timer" class="pulse-anim">⏳ 15s</span>
+          <button onclick="resetToMenu()" id="flee-btn">FLEE</button>
         </div>
 
         <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
@@ -50,14 +59,14 @@
       <div id="screen-gameover" class="screen">
         <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
         <p id="gameover-reason"></p>
-        <button onclick="resetGame()">TRY AGAIN</button>
+        <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
 
       <!-- VICTORY SCREEN -->
       <div id="screen-victory" class="screen">
         <h1>GOOD JOB, ANAK!</h1>
         <p>You survived Mama's tasks.</p>
-        <button onclick="resetGame()">PLAY AGAIN</button>
+        <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
     </div>
     <script src="script.js"></script>

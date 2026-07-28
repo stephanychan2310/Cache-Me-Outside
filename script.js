@@ -1,6 +1,6 @@
 const quests = [
   {
-    type: "punctuation",
+    type: "Punctuation",
     title: "Quest 1: Sumagot ka kay Mama",
     sprite: "👩‍🦱",
     timeLimit: 10,
@@ -11,7 +11,7 @@ const quests = [
     failMsg: "You used the wrong tone! Mama is furious!",
   },
   {
-    type: "capitalization",
+    type: "Capitalization",
     title: "Quest 2: Kailangan mong Puntahan si Mama",
     sprite: "🏃‍♂️",
     timeLimit: 15,
@@ -33,14 +33,14 @@ const quests = [
     failMsg: "Aling Myrna didn't understand you! You came home empty-handed!",
   },
   {
-    type: "reading",
+    type: "Reading",
     title: "Quest 4: Pinagluto ka ni Mama",
     sprite: "🍲",
     timeLimit: 30,
     scenario:
       "Mama left a recipe: 'Boil pork with soy sauce, vinegar, garlic, and bay leaves.'",
     text: "What are you cooking?",
-    options: ["Sinigang", "Adobo", "Tinola"],
+    options: ["Paksiw na tilapia", "Adobong baboy", "Sinigang na Hipon"],
     answer: "Adobo",
     failMsg: "You cooked the wrong dish! Dinner is ruined!",
   },
@@ -50,12 +50,54 @@ let currentLevel = 0;
 let timer;
 let timeLeft;
 
-function startGame() {
-  document.getElementById("screen-start").classList.remove("active");
+// --- NEW MENU LOGIC ---
+function openMenu() {
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  document.getElementById("screen-menu").classList.add("active");
+  generateMenu();
+}
+
+function generateMenu() {
+  const grid = document.getElementById("quest-grid");
+  grid.innerHTML = ""; // Clear previous buttons
+
+  quests.forEach((q, index) => {
+    const btn = document.createElement("button");
+    btn.className = "quest-btn";
+    btn.innerHTML = `<span>${q.title}</span> <span class="quest-sprite">${q.sprite}</span>`;
+    btn.onclick = () => startSpecificQuest(index);
+    grid.appendChild(btn);
+  });
+}
+
+function startSpecificQuest(index) {
+  currentLevel = index;
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
   document.getElementById("screen-game").classList.add("active");
-  currentLevel = 0;
   loadLevel();
 }
+
+function resetToMenu() {
+  clearInterval(timer);
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  document.getElementById("screen-menu").classList.add("active");
+  generateMenu();
+}
+
+function resetToStart() {
+  clearInterval(timer);
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  document.getElementById("screen-start").classList.add("active");
+}
+// ----------------------
 
 function loadLevel() {
   if (currentLevel >= quests.length) {
@@ -141,11 +183,4 @@ function winGame() {
   clearInterval(timer);
   document.getElementById("screen-game").classList.remove("active");
   document.getElementById("screen-victory").classList.add("active");
-}
-
-function resetGame() {
-  document
-    .querySelectorAll(".screen")
-    .forEach((s) => s.classList.remove("active"));
-  document.getElementById("screen-start").classList.add("active");
 }
