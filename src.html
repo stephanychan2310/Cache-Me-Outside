@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -15,24 +15,36 @@
       <!-- START SCREEN -->
       <div id="screen-start" class="screen active">
         <h1>UTOS NI MAMA</h1>
-        <p>An English-Filipino RPG Quest</p>
+        <p>An English-Filipino RPG Quests</p>
         <button onclick="openMenu()">START QUEST</button>
-      </div>
+      </div> 
 
-      <!-- LEVEL SELECT MENU (NEW) -->
-      <div id="screen-menu" class="screen">
+      <!-- SELECT MENU -->
+      <div id="screen-menu" class="screen"> 
+        <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">🔀 SHUFFLE</button>
+        <button onclick="openStats()" id="stats-btn">📊 STATS</button>
+        
         <h1>MGA UTOS</h1>
         <p>Choose a task from Mama:</p>
         <div id="quest-grid"></div>
         <button onclick="resetToStart()" class="back-btn">BACK TO TITLE</button>
       </div>
 
+      <!-- STATS SCREEN -->
+      <div id="screen-stats" class="screen">
+        <h1>REPORT CARD</h1>
+        <p>Session Mistake Tracker</p>
+        <div id="global-stats" class="stats-box"></div>
+        <button onclick="resetToMenu()">BACK TO MENU</button>
+      </div>
+
       <!-- GAME SCREEN -->
       <div id="screen-game" class="screen">
         <div id="hud">
           <span id="level-title">Quest 1</span>
+          <span id="hearts-display">❤️❤️❤️</span>
           <span id="timer" class="pulse-anim">⏳ 15s</span>
-          <button onclick="resetToMenu()" id="flee-btn">FLEE</button>
+          <button onclick="resetToMenu()" id="Exit">Exit</button>
         </div>
 
         <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
@@ -42,7 +54,6 @@
           <p id="question-text" class="highlight"></p>
         </div>
 
-        <!-- Dynamic Controls -->
         <div id="options-container"></div>
         <div id="input-container" style="display: none">
           <input
@@ -53,9 +64,12 @@
           />
           <button onclick="checkSpelling()">SUBMIT</button>
         </div>
+
+        <!-- IN-GAME NOTIFICATION BOX -->
+        <div id="notification-box" style="display: none;"></div>
       </div>
 
-      <!-- GAME OVER SCREEN (OR ELSE...) -->
+      <!-- GAME OVER SCREEN -->
       <div id="screen-gameover" class="screen">
         <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
         <p id="gameover-reason"></p>
