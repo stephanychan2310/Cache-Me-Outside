@@ -5,7 +5,6 @@ root = tk.Tk()
 root.title("RPG")
 root.geometry("720x720")
 
-
 class baseCharacter:
     def __init__(self, Name, HP, DF, ATK, LVL, EXP,):
         self.Name = Name
@@ -93,11 +92,6 @@ def log(message): #helper function for text logs
     log_box.insert(tk.END, message + "\n")#inserts new line after a log 
     log_box.see(tk.END)#scrolls down to latest log
 
-style = ttk.Style()
-style.theme_use("default")
-style.configure("green.Horizontal.TProgressbar", background='green')
-style.configure("blue.Horizontal.TProgressbar", background='blue')
-
 def turn(move):
     player.Status()
     enemy.Status()
@@ -137,8 +131,6 @@ def turn(move):
     enemy_status.config(text=f"{enemy.Name} - HP: {enemy.HP}")
     player_hpBar["value"] = max(0, player.HP)
     enemy_hpBar["value"] = max(0, enemy.HP)
-    player_manaBar["value"] = max(0, player.MANA)
-    enemy_manaBar["value"] = max(0, enemy.MANA)
     
 
 player = Mage("Mage", 100, 20, 40, 2, 60, 120)
@@ -149,7 +141,7 @@ player_status = tk.Label(root, text=f"{player.Name} - HP: {player.HP} | Mana: {p
 player_status.pack(pady=(20,5))
 player_hpBar = ttk.Progressbar(root, orient="horizontal", length=200, mode="determinate", maximum=100, value=player.HP, style="green.Horizontal.TProgressbar")
 player_hpBar.pack(pady =(0,20))
-player_manaBar = ttk.Progressbar(root, orient="horizontal", length=200, mode="determinate", maximum= 100, value= player.MANA, style="blue.Horizontal.TProgressbar")
+player_manaBar = ttk.Progressbar(root, orient="horizontal", lengt=200, mode="determinate", maximum= 100, value= player.MANA, style="blue.Horizontal.TProgressbar")
 player_manaBar.pack(pady=(0,20))
 player_status.config(text=f"{player.Name} - HP: {player.HP} | Mana: {player.MANA}")
 
@@ -157,10 +149,14 @@ enemy_status = tk.Label(root, text=f"{enemy.Name} - HP: {enemy.HP}", font=("Aria
 enemy_status.pack(pady=(20,5))
 enemy_hpBar = ttk.Progressbar(root, orient="horizontal", length=200, mode="determinate", maximum=80, value=enemy.HP, style="green.Horizontal.TProgressbar")
 enemy_hpBar.pack(pady=(0,20))
-enemy_manaBar = ttk.Progressbar(root, orient="horizontal", length=200, mode="determinate", maximum= 100, value= enemy.MANA, style="blue.Horizontal.TProgressbar")
+enemy_manaBar = ttk.Progressbar(root, orient="horizontal", lengt=200, mode="determinate", maximum= 100, value= enemy.MANA, style="")
 enemy_manaBar.pack(pady=(0,20))
 enemy_status.config(text=f"{enemy.Name} - HP: {enemy.HP}")
 
+style = ttk.Style
+style.theme_use('default')
+style.configure("green.Horizontal.TProgressbar", background='green')
+style.configure("blue.Horizontal.TProgressbar", background='blue')
 btn_frame = tk.Frame(root)
 btn_frame.pack(pady=20)
 
