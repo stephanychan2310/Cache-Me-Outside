@@ -25,6 +25,18 @@ body {
   flex-direction: column;
 }
 
+#screen-start{
+  position: relative;
+}
+
+#mama{
+  position: center;
+  top: 350px;
+  bottom: 0;
+  width: 200px;
+  height: 200px;
+}
+
 .screen {
   display: none;
   padding: 2rem;
@@ -274,6 +286,10 @@ input[type="text"] {
 
 #stats-btn {
   position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  width: fit-content;
   top: 15px;
   right: 15px;
   background-color: #3498db;
@@ -287,8 +303,16 @@ input[type="text"] {
   background-color: #2980b9;
 }
 
+#screen-menu h1{
+  margin-top: 60px;
+}
+
 #shuffle-btn {
   position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  width: fit-content;
   top: 15px;
   left: 15px;
   background-color: #8e44ad;
