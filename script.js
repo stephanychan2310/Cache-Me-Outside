@@ -130,7 +130,7 @@ const quests = [
   }
 ];
 
-const buttonSound = new Audio(''); 
+const buttonSound = new Audio('sounds/btn-slick.wav'); 
 
 function playSound() {
   if (buttonSound.src && buttonSound.src !== window.location.href) {
