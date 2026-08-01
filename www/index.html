@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,15 +17,27 @@
         <h1>UTOS NI MAMA</h1>
 
         <p>An English-Filipino RPG Quests</p>
-        <img src="images/mama.png" id="mama" onerror="this.style.display='none'">
-        <button onclick="openMenu()">START QUEST</button>
-      </div> 
+        <img
+          src="images/mama.png"
+          id="mama"
+          onerror="this.style.display = 'none'"
+        />
+        <input
+          type="text"
+          id="name-input"
+          placeholder="Enter your name"
+          style="margin-bottom: 10px; max-width: 300px"
+        />
+        <button onclick="startGame()">START QUEST</button>
+      </div>
 
       <!-- SELECT MENU -->
-      <div id="screen-menu" class="screen"> 
-        <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">🔀 SHUFFLE</button>
+      <div id="screen-menu" class="screen">
+        <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">
+          🔀 SHUFFLE
+        </button>
         <button onclick="openStats()" id="stats-btn">📊 STATS</button>
-        
+
         <h1>MGA UTOS</h1>
         <p>Choose a task from Mama:</p>
         <div id="quest-grid"></div>
@@ -37,6 +49,7 @@
         <h1>REPORT CARD</h1>
         <p>Session Mistake Tracker</p>
         <div id="global-stats" class="stats-box"></div>
+        <button onclick="clearHistory()" style="background-color: #c0392b;">🗑️ CLEAR HISTORY</button>
         <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
 
@@ -66,25 +79,31 @@
           />
           <button onclick="checkSpelling()">SUBMIT</button>
         </div>
-
-        <!-- IN-GAME NOTIFICATION BOX -->
-        <div id="notification-box" style="display: none;"></div>
       </div>
+        <!-- GAME OVER SCREEN -->
+        <div id="screen-gameover" class="screen">
+          <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
+          <p id="gameover-reason"></p>
+          <img
+            src="images/mama-gameover.png"
+            id="mama"
+            onerror="this.style.display = 'none'"
+          />
+          <button onclick="resetToMenu()">BACK TO MENU</button>
+        </div>
 
-      <!-- GAME OVER SCREEN -->
-      <div id="screen-gameover" class="screen">
-        <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
-        <p id="gameover-reason"></p>
-        <img src="images/mama-gameover.png" id="mama" onerror="this.style.display='none'">
-        <button onclick="resetToMenu()">BACK TO MENU</button>
-      </div>
-
-      <!-- VICTORY SCREEN -->
-      <div id="screen-victory" class="screen">
-        <h1>GOOD JOB, ANAK!</h1>
-        <p>You survived Mama's tasks.</p>
-        <img src="images/mama-happy.png" id="mama" onerror="this.style.display='none'">
-        <button onclick="resetToMenu()">BACK TO MENU</button>
+        <!-- VICTORY SCREEN -->
+        <div id="screen-victory" class="screen">
+          <h1>GOOD JOB, ANAK!</h1>
+          <p>You survived Mama's tasks.</p>
+          <img
+            src="images/mama-happy.png"
+            id="mama"
+            onerror="this.style.display = 'none'"
+          />
+          <button onclick="resetToMenu()">BACK TO MENU</button>
+        </div>
+        <div id="notification-box" style="display: none"></div>
       </div>
     </div>
     <script src="script.js"></script>

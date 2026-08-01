@@ -25,11 +25,11 @@ body {
   flex-direction: column;
 }
 
-#screen-start{
+#screen-start {
   position: relative;
 }
 
-#mama{
+#mama {
   position: center;
   top: 350px;
   bottom: 0;
@@ -303,7 +303,7 @@ input[type="text"] {
   background-color: #2980b9;
 }
 
-#screen-menu h1{
+#screen-menu h1 {
   margin-top: 60px;
 }
 
@@ -327,41 +327,40 @@ input[type="text"] {
 }
 
 #screen-gameover {
-  background-image: url('images/mama-gameover.png');
+  background-image: url("images/mama-gameover.png");
   background-position: bottom left;
   background-repeat: no-repeat;
 }
 
 #screen-victory {
-  background-image: url('images/mama-happy.png');
+  background-image: url("images/mama-happy.png");
   background-position: bottom left;
   background-repeat: no-repeat;
 }
 
-
 #game-container.bg-punctuation {
-  background-image: url('images/Punctuation.png');
-  background-size: cover;
-  background-position: center;
-  background-blend-mode: normal; 
-}
-
-#game-container.bg-capitalization {
-  background-image: url('images/Capitalization.png'); 
+  background-image: url("images/Punctuation.png");
   background-size: cover;
   background-position: center;
   background-blend-mode: normal;
-} 
+}
+
+#game-container.bg-capitalization {
+  background-image: url("images/Capitalization.png");
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: normal;
+}
 
 #game-container.bg-spelling {
-  background-image: url('images/Spelling.png'); 
+  background-image: url("images/Spelling.png");
   background-size: cover;
   background-position: center;
   background-blend-mode: normal;
 }
 
 #game-container.bg-reading {
-  background-image: url('images/Reading-Comp.png'); 
+  background-image: url("images/Reading-Comp.png");
   background-size: cover;
   background-position: center;
   background-blend-mode: normal;
@@ -375,4 +374,41 @@ input[type="text"] {
 #options-container button,
 .quest-btn {
   text-transform: none !important;
+}
+
+.player-stat-btn {
+  width: 100%;
+  background-color: #8e44ad;
+  text-align: left;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-stat-btn:hover {
+  background-color: #9b59b6;
+}
+
+.player-stat-box {
+  background-color: #000000;
+  border: 4px solid #ffffff;
+  padding: 1.5rem;
+  margin-bottom: 15px;
+  text-align: left;
+  font-size: 0.7rem;
+  box-shadow: inset 4px 4px 0px #333333;
+}
+
+.player-stat-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.8;
+}
+
+.player-stat-box li {
+  margin-bottom: 8px;
+  border-bottom: 2px dashed #333;
+  padding-bottom: 5px;
 }

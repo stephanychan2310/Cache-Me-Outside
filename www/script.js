@@ -1,4 +1,7 @@
-// --- 1. CATEGORY QUESTION BANKS ---
+// ==========================================
+// QUESTS & QUESTION BANKS
+// ==========================================
+
 const questionBanks = {
   Punctuation: [
     {
@@ -7,7 +10,7 @@ const questionBanks = {
       options: ["?", "!", "."],
       answer: "?",
       timeLimit: 15,
-      failMsg: "Questions require a question mark!"
+      failMsg: "Questions require a question mark!",
     },
     {
       scenario: "You broke Mama's favorite plate by accident.",
@@ -15,7 +18,7 @@ const questionBanks = {
       options: [".", "?", ","],
       answer: ".",
       timeLimit: 15,
-      failMsg: "Apologies end with a period!"
+      failMsg: "Apologies end with a period!",
     },
     {
       scenario: "Mama is holding her slipper! Express your shock:",
@@ -23,8 +26,8 @@ const questionBanks = {
       options: ["!", "?", ","],
       answer: "!",
       timeLimit: 12,
-      failMsg: "Shock or fear requires an exclamation mark!"
-    }
+      failMsg: "Shock or fear requires an exclamation mark!",
+    },
   ],
 
   Capitalization: [
@@ -34,7 +37,8 @@ const questionBanks = {
       options: ["Rizal", "rizal"],
       answer: "Rizal",
       timeLimit: 15,
-      failMsg: "Specific street names are proper nouns and must be capitalized!"
+      failMsg:
+        "Specific street names are proper nouns and must be capitalized!",
     },
     {
       scenario: "Say hello to the local official passing by:",
@@ -42,7 +46,7 @@ const questionBanks = {
       options: ["Captain", "captain"],
       answer: "Captain",
       timeLimit: 15,
-      failMsg: "Official titles used before names must be capitalized!"
+      failMsg: "Official titles used before names must be capitalized!",
     },
     {
       scenario: "A driver offers you a ride home:",
@@ -50,8 +54,8 @@ const questionBanks = {
       options: ["tricycle", "Tricycle"],
       answer: "tricycle",
       timeLimit: 15,
-      failMsg: "Common vehicle names should be in lowercase!"
-    }
+      failMsg: "Common vehicle names should be in lowercase!",
+    },
   ],
 
   Spelling: [
@@ -60,22 +64,22 @@ const questionBanks = {
       text: "Mom wrote: 'Buy a block of CHESE for spaghetti.' Type the correct spelling:",
       answer: "Cheese",
       timeLimit: 20,
-      failMsg: "Cheese is spelled C-H-E-E-S-E!"
+      failMsg: "Cheese is spelled C-H-E-E-S-E!",
     },
     {
       scenario: "Fix Mom's misspelled note for the sauce:",
       text: "Mom wrote: 'Get one bottle of VINAGAR.' Type the correct spelling:",
       answer: "Vinegar",
       timeLimit: 20,
-      failMsg: "Vinegar ends with -gar!"
+      failMsg: "Vinegar ends with -gar!",
     },
     {
       scenario: "Fix Mom's misspelled note for coffee:",
       text: "Mom wrote: 'Grab a bag of SUGGAR.' Type the correct spelling:",
       answer: "Sugar",
       timeLimit: 20,
-      failMsg: "Sugar has only one 'g'!"
-    }
+      failMsg: "Sugar has only one 'g'!",
+    },
   ],
 
   Reading: [
@@ -85,57 +89,60 @@ const questionBanks = {
       options: ["Pork Sinigang", "Chicken Adobo", "Beef Nilaga"],
       answer: "Pork Sinigang",
       timeLimit: 20,
-      failMsg: "Tamarind broth and kangkong are used for Sinigang!"
+      failMsg: "Tamarind broth and kangkong are used for Sinigang!",
     },
     {
       scenario: "Read the banana cue recipe:",
       text: "Heat oil and melt brown sugar until caramel. Fry bananas until coated. Why do you melt the brown sugar?",
-      options: ["To coat bananas in caramel", "To make it salty", "To cool the pan"],
+      options: [
+        "To coat bananas in caramel",
+        "To make it salty",
+        "To cool the pan",
+      ],
       answer: "To coat bananas in caramel",
       timeLimit: 20,
-      failMsg: "Melted sugar turns into a sweet caramel coating!"
-    }
-  ]
+      failMsg: "Melted sugar turns into a sweet caramel coating!",
+    },
+  ],
 };
 
-// --- 2. QUEST DEFINITIONS ---
 const quests = [
   {
     id: 1,
     title: "SUMAGOT KA KAY MAMA (PUNCTUATION)",
     type: "Punctuation",
     icon: "👦",
-    sprite: "👦"
+    sprite: "👦",
   },
   {
     id: 2,
     title: "PUNTAHAN SI MAMA (CAPITALIZATION)",
     type: "Capitalization",
     icon: "🏃",
-    sprite: "🏃"
+    sprite: "🏃",
   },
   {
     id: 3,
     title: "UTANG KAY ALING MYRNA (SPELLING)",
     type: "Spelling",
     icon: "🏪",
-    sprite: "🏪"
+    sprite: "🏪",
   },
   {
     id: 4,
     title: "PINAGLUTO KA NI MAMA (READING)",
     type: "Reading",
     icon: "🍲",
-    sprite: "🍲"
-  }
+    sprite: "🍲",
+  },
 ];
 
-const buttonSound = new Audio('sounds/btn-slick.wav'); 
+const buttonSound = new Audio("sounds/btn-slick.wav");
 
 function playSound() {
   if (buttonSound.src && buttonSound.src !== window.location.href) {
-    buttonSound.play().catch(e => console.log("Audio"));
-  } 
+    buttonSound.play().catch((e) => console.log("Audio"));
+  }
 }
 
 let currentLevel = 0;
@@ -144,6 +151,127 @@ let timer;
 let timeLeft;
 let maxLives = 3;
 let lives = maxLives;
+let currentPlayer = "Guest";
+let mistakeDatabase = {
+  Punctuation: 0,
+  Capitalization: 0,
+  Spelling: 0,
+  Reading: 0,
+};
+
+// Safe local storage helper to prevent crash from corrupted data
+function getSafeHistory() {
+  try {
+    const savedData = localStorage.getItem("StatsHistory");
+    return savedData ? JSON.parse(savedData) : {};
+  } catch (error) {
+    console.log("Corrupted save data found and cleared!");
+    localStorage.removeItem("StatsHistory");
+    return {};
+  }
+}
+
+function startGame() {
+  playSound();
+  const nameInput = document.getElementById("name-input");
+  currentPlayer = nameInput ? nameInput.value.trim() || "Guest" : "Guest";
+
+  let history = getSafeHistory();
+
+  if (history[currentPlayer]) {
+    mistakeDatabase = history[currentPlayer];
+  } else {
+    mistakeDatabase = {
+      Punctuation: 0,
+      Capitalization: 0,
+      Spelling: 0,
+      Reading: 0,
+    };
+  }
+  saveStatsToLocal();
+
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  const menuScreen = document.getElementById("screen-menu");
+  if (menuScreen) menuScreen.classList.add("active");
+  generateMenu();
+}
+
+function saveStatsToLocal() {
+  let history = getSafeHistory();
+  history[currentPlayer] = mistakeDatabase;
+  localStorage.setItem("StatsHistory", JSON.stringify(history));
+}
+
+function recordMistake(categoryType) {
+  if (mistakeDatabase[categoryType] !== undefined) {
+    mistakeDatabase[categoryType]++;
+    saveStatsToLocal();
+  }
+}
+
+function renderStats(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  let history = getSafeHistory();
+
+  if (Object.keys(history).length === 0) {
+    container.innerHTML = "<p>No records found</p>";
+    return;
+  }
+
+  for (const [name, stats] of Object.entries(history)) {
+    const btn = document.createElement("button");
+    btn.innerText = `👤 ${name}`;
+    btn.className = "player-stat-btn";
+
+    const statsDiv = document.createElement("div");
+    statsDiv.style.display = "none";
+    statsDiv.className = "player-stat-box";
+
+    let totalMistakes = 0;
+    let html =
+      "<ul style='list-style:none; padding:0; line-height: 1.5; margin:0;'>";
+
+    for (const [category, count] of Object.entries(stats)) {
+      html += `<li>${category} Errors: <span style="color:${count > 0 ? "#e74c3c" : "#2ecc71"}">${count}</span></li>`;
+      totalMistakes += count;
+    }
+
+    html += "</ul>";
+    html += `<p style="text-align:center; margin-top:10px; color:#f1c40f;">Total Mistakes: ${totalMistakes}</p>`;
+    statsDiv.innerHTML = html;
+
+    btn.onclick = () => {
+      playSound();
+      if (statsDiv.style.display === "none") {
+        statsDiv.style.display = "block";
+      } else {
+        statsDiv.style.display = "none";
+      }
+    };
+
+    container.appendChild(btn);
+    container.appendChild(statsDiv);
+  }
+}
+
+function clearHistory() {
+  playSound();
+  localStorage.removeItem("StatsHistory");
+  mistakeDatabase = {
+    Punctuation: 0,
+    Capitalization: 0,
+    Spelling: 0,
+    Reading: 0,
+  };
+  renderStats("global-stats");
+  showNotification("History Cleared!");
+}
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -153,41 +281,10 @@ function shuffleArray(array) {
   return array;
 }
 
-// --- STAT SYSTEM ---
-let mistakeDatabase = {
-  "Punctuation": 0,
-  "Capitalization": 0,
-  "Spelling": 0,
-  "Reading": 0 
-};
-
-function recordMistake(categoryType) { 
-  if (mistakeDatabase[categoryType] !== undefined) {
-    mistakeDatabase[categoryType]++; 
-  }
-}
-
-function renderStats(containerId) { 
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  
-  let html = "<ul style='list-style:none; padding:0; line-height: 1.5; margin:0;'>";
-  
-  let totalMistakes = 0;
-  for (const [category, count] of Object.entries(mistakeDatabase)) {
-    html += `<li>${category} Errors: <span style="color:${count > 0 ? '#e74c3c' : '#2ecc71'}">${count}</span></li>`;
-    totalMistakes += count; 
-  }
-  
-  html += "</ul>";
-  html += `<p style="text-align:center; margin-top:10px; color:#f1c40f; line-height: 1.8">Total Mistakes: ${totalMistakes}</p>`;
-  container.innerHTML = html;
-}
-
 function updateHeartsUI() {
   const heartsDisplay = document.getElementById("hearts-display");
   if (!heartsDisplay) return;
-  
+
   let heartsHtml = "";
   for (let i = 0; i < maxLives; i++) {
     heartsHtml += i < lives ? "❤️" : "🖤";
@@ -201,20 +298,22 @@ function showNotification(message, callback) {
     if (callback) callback();
     return;
   }
-  
+
   notifBox.innerText = message;
   notifBox.style.display = "block";
-  
+
   setTimeout(() => {
     notifBox.style.display = "none";
     if (callback) callback();
-  }, 1500); 
+  }, 1500);
 }
 
 // MENU LOGIC
 function openMenu() {
   playSound();
-  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
   const menuScreen = document.getElementById("screen-menu");
   if (menuScreen) menuScreen.classList.add("active");
   generateMenu();
@@ -222,12 +321,20 @@ function openMenu() {
 
 function shuffleAndReloadMenu() {
   playSound();
-  shuffleArray(quests); 
-  generateMenu();     
+
+  // Shuffles questions inside each category instead of the menu order
+  for (const category in questionBanks) {
+    shuffleArray(questionBanks[category]);
+  }
+
+  generateMenu();
+  showNotification("Questions Shuffled!", null);
 }
 
 function generateMenu() {
-  const grid = document.getElementById("quest-grid") || document.getElementById("quest-list");
+  const grid =
+    document.getElementById("quest-grid") ||
+    document.getElementById("quest-list");
   if (!grid) return;
   grid.innerHTML = "";
 
@@ -235,7 +342,7 @@ function generateMenu() {
     const btn = document.createElement("button");
     btn.className = "quest-btn quest-item";
     const spriteIcon = q.icon || q.sprite || "🎮";
-    
+
     btn.innerHTML = `<span>Quest ${index + 1}: ${q.title}</span> <span class="quest-sprite">${spriteIcon}</span>`;
     btn.onclick = () => startSpecificQuest(index);
     grid.appendChild(btn);
@@ -246,13 +353,15 @@ function startSpecificQuest(index) {
   playSound();
   currentLevel = index;
   currentQuestionIndex = 0;
-  lives = maxLives; 
+  lives = maxLives;
   updateHeartsUI();
-  
-  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
   const gameScreen = document.getElementById("screen-game");
   if (gameScreen) gameScreen.classList.add("active");
-  
+
   loadLevel();
 }
 
@@ -260,8 +369,10 @@ function resetToMenu() {
   playSound();
   clearInterval(timer);
   resetBackground();
-  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
-  
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+
   const menuScreen = document.getElementById("screen-menu");
   if (menuScreen) menuScreen.classList.add("active");
   generateMenu();
@@ -271,8 +382,10 @@ function resetToStart() {
   playSound();
   clearInterval(timer);
   resetBackground();
-  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
-  
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+
   const startScreen = document.getElementById("screen-start");
   if (startScreen) startScreen.classList.add("active");
 }
@@ -280,8 +393,10 @@ function resetToStart() {
 function openStats() {
   playSound();
   resetBackground();
-  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
-  
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+
   const statsScreen = document.getElementById("screen-stats");
   if (statsScreen) statsScreen.classList.add("active");
   renderStats("global-stats");
@@ -296,7 +411,7 @@ function loadLevel() {
 
   const q = quests[currentLevel];
   const bank = questionBanks[q.type];
-  
+
   if (!bank || currentQuestionIndex >= bank.length) {
     currentLevel++;
     currentQuestionIndex = 0;
@@ -312,19 +427,25 @@ function loadLevel() {
 
   const gameContainer = document.getElementById("game-container");
   if (gameContainer) {
-    gameContainer.classList.remove("bg-punctuation", "bg-capitalization", "bg-spelling", "bg-reading", "bg-default");
+    gameContainer.classList.remove(
+      "bg-punctuation",
+      "bg-capitalization",
+      "bg-spelling",
+      "bg-reading",
+      "bg-default",
+    );
     gameContainer.classList.add("bg-" + q.type.toLowerCase());
   }
 
   const levelTitle = document.getElementById("level-title");
   if (levelTitle) levelTitle.innerText = `Quest ${currentLevel + 1}: ${q.type}`;
-  
+
   const charSprite = document.getElementById("character-sprite");
   if (charSprite) charSprite.innerText = q.sprite || q.icon;
-  
+
   const scenarioText = document.getElementById("scenario-text");
   if (scenarioText) scenarioText.innerText = currentQ.scenario;
-  
+
   const questionText = document.getElementById("question-text");
   if (questionText) questionText.innerText = currentQ.text;
 
@@ -344,10 +465,10 @@ function loadLevel() {
     if (inputContainer) inputContainer.style.display = "none";
     if (optionsContainer) {
       optionsContainer.style.display = "flex";
-      
+
       const randomizedOptions = [...currentQ.options];
       shuffleArray(randomizedOptions);
-      
+
       randomizedOptions.forEach((opt) => {
         const btn = document.createElement("button");
         btn.innerText = opt;
@@ -371,21 +492,21 @@ function startTimer(seconds) {
   timer = setInterval(() => {
     timeLeft--;
     updateTimerUI();
-    
+
     if (timeLeft <= 0) {
       clearInterval(timer);
       lives--;
       updateHeartsUI();
-      
+
       const q = quests[currentLevel];
       const currentQ = questionBanks[q.type][currentQuestionIndex];
-      recordMistake(q.type); 
+      recordMistake(q.type);
 
       if (lives <= 0) {
         triggerGameOver("Time's up! " + currentQ.failMsg);
       } else {
         showNotification("TIME'S UP!\n-1 ❤️", () => {
-          loadLevel(); 
+          loadLevel();
         });
       }
     }
@@ -417,13 +538,13 @@ function checkAnswer(selected) {
   } else {
     lives--;
     updateHeartsUI();
-    recordMistake(q.type); 
+    recordMistake(q.type);
 
     if (lives <= 0) {
       triggerGameOver("Mali! " + currentQ.failMsg);
     } else {
       showNotification("MALI!\n-1 ❤️", () => {
-        loadLevel(); 
+        loadLevel();
       });
     }
   }
@@ -432,13 +553,13 @@ function checkAnswer(selected) {
 function triggerGameOver(reason) {
   clearInterval(timer);
   resetBackground();
-  
+
   const gameScreen = document.getElementById("screen-game");
   if (gameScreen) gameScreen.classList.remove("active");
-  
+
   const gameoverScreen = document.getElementById("screen-gameover");
   if (gameoverScreen) gameoverScreen.classList.add("active");
-  
+
   const reasonElem = document.getElementById("gameover-reason");
   if (reasonElem) reasonElem.innerText = reason;
 }
@@ -446,10 +567,10 @@ function triggerGameOver(reason) {
 function winGame() {
   clearInterval(timer);
   resetBackground();
-  
+
   const gameScreen = document.getElementById("screen-game");
   if (gameScreen) gameScreen.classList.remove("active");
-  
+
   const victoryScreen = document.getElementById("screen-victory");
   if (victoryScreen) victoryScreen.classList.add("active");
 }
@@ -457,8 +578,13 @@ function winGame() {
 function resetBackground() {
   const gameContainer = document.getElementById("game-container");
   if (!gameContainer) return;
-  
-  gameContainer.classList.remove("bg-punctuation", "bg-capitalization", "bg-spelling", "bg-reading");
+
+  gameContainer.classList.remove(
+    "bg-punctuation",
+    "bg-capitalization",
+    "bg-spelling",
+    "bg-reading",
+  );
   gameContainer.classList.add("bg-default");
 }
 
