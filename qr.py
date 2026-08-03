@@ -1,6 +1,6 @@
 import qrcode
 
-data = "https://drive.google.com/file/d/1yEcbI1KZTYuW-Q6rGx7fg8NCecfsvm9c/view?usp=drive_link"
+data = "https://drive.google.com/uc?export=download&id=1yEcbI1KZTYuW-Q6rGx7fg8NCecfsvm9c"
 
 # 2. Create the QR Code object with custom settings
 qr = qrcode.QRCode(
