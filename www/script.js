@@ -141,7 +141,7 @@ const buttonSound = new Audio("sounds/btn-slick.wav");
 
 function playSound() {
   if (buttonSound.src && buttonSound.src !== window.location.href) {
-    buttonSound.play().catch((e) => console.log("Audio"));
+    buttonSound.play().catch((e) => console.log("Audio play suppressed"));
   }
 }
 
@@ -152,6 +152,7 @@ let timeLeft;
 let maxLives = 3;
 let lives = maxLives;
 let currentPlayer = "Guest";
+let isAnsweringBlocked = false;
 let mistakeDatabase = {
   Punctuation: 0,
   Capitalization: 0,
@@ -159,7 +160,6 @@ let mistakeDatabase = {
   Reading: 0,
 };
 
-// Safe local storage helper to prevent crash from corrupted data
 function getSafeHistory() {
   try {
     const savedData = localStorage.getItem("StatsHistory");
@@ -216,7 +216,6 @@ function renderStats(containerId) {
   if (!container) return;
 
   container.innerHTML = "";
-
   let history = getSafeHistory();
 
   if (Object.keys(history).length === 0) {
@@ -248,11 +247,8 @@ function renderStats(containerId) {
 
     btn.onclick = () => {
       playSound();
-      if (statsDiv.style.display === "none") {
-        statsDiv.style.display = "block";
-      } else {
-        statsDiv.style.display = "none";
-      }
+      statsDiv.style.display =
+        statsDiv.style.display === "none" ? "block" : "none";
     };
 
     container.appendChild(btn);
@@ -311,6 +307,7 @@ function showNotification(message, callback) {
 // MENU LOGIC
 function openMenu() {
   playSound();
+  stopSpeech();
   document
     .querySelectorAll(".screen")
     .forEach((s) => s.classList.remove("active"));
@@ -321,12 +318,9 @@ function openMenu() {
 
 function shuffleAndReloadMenu() {
   playSound();
-
-  // Shuffles questions inside each category instead of the menu order
   for (const category in questionBanks) {
     shuffleArray(questionBanks[category]);
   }
-
   generateMenu();
   showNotification("Questions Shuffled!", null);
 }
@@ -369,7 +363,7 @@ function resetToMenu() {
   playSound();
   clearInterval(timer);
   resetBackground();
-  window.speechSynthesis.cancel(); //stops voice
+  stopSpeech();
   document
     .querySelectorAll(".screen")
     .forEach((s) => s.classList.remove("active"));
@@ -383,6 +377,7 @@ function resetToStart() {
   playSound();
   clearInterval(timer);
   resetBackground();
+  stopSpeech();
   document
     .querySelectorAll(".screen")
     .forEach((s) => s.classList.remove("active"));
@@ -393,6 +388,7 @@ function resetToStart() {
 
 function openStats() {
   playSound();
+  stopSpeech();
   resetBackground();
   document
     .querySelectorAll(".screen")
@@ -405,6 +401,8 @@ function openStats() {
 
 // GAME LEVEL RENDERING
 function loadLevel() {
+  isAnsweringBlocked = false;
+
   if (currentLevel >= quests.length) {
     winGame();
     return;
@@ -462,7 +460,10 @@ function loadLevel() {
     if (inputContainer) {
       inputContainer.style.display = "flex";
       const spellingInput = document.getElementById("spelling-input");
-      if (spellingInput) spellingInput.value = "";
+      if (spellingInput) {
+        spellingInput.value = "";
+        spellingInput.focus();
+      }
     }
   } else {
     if (inputContainer) inputContainer.style.display = "none";
@@ -500,6 +501,7 @@ function startTimer(seconds) {
       clearInterval(timer);
       lives--;
       updateHeartsUI();
+      stopSpeech();
 
       const q = quests[currentLevel];
       const currentQ = questionBanks[q.type][currentQuestionIndex];
@@ -522,6 +524,7 @@ function updateTimerUI() {
 }
 
 function checkSpelling() {
+  if (isAnsweringBlocked) return;
   playSound();
   const spellingInput = document.getElementById("spelling-input");
   const userInput = spellingInput ? spellingInput.value.trim() : "";
@@ -529,9 +532,12 @@ function checkSpelling() {
 }
 
 function checkAnswer(selected) {
-  window.speechSynthesis.cancel(); // stops speaking if the player already answers
+  if (isAnsweringBlocked) return;
+  isAnsweringBlocked = true;
 
+  stopSpeech();
   clearInterval(timer);
+
   const q = quests[currentLevel];
   const currentQ = questionBanks[q.type][currentQuestionIndex];
 
@@ -557,6 +563,7 @@ function checkAnswer(selected) {
 
 function triggerGameOver(reason) {
   clearInterval(timer);
+  stopSpeech();
   resetBackground();
 
   const gameScreen = document.getElementById("screen-game");
@@ -571,6 +578,7 @@ function triggerGameOver(reason) {
 
 function winGame() {
   clearInterval(timer);
+  stopSpeech();
   resetBackground();
 
   const gameScreen = document.getElementById("screen-game");
@@ -593,30 +601,35 @@ function resetBackground() {
   gameContainer.classList.add("bg-default");
 }
 
+function stopSpeech() {
+  if ("speechSynthesis" in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {
+      console.log("Speech cancel error ignored");
+    }
+  }
+}
+
+// Voice Function
+function mamaSpeaks(textToSay) {
+  stopSpeech();
+
+  if ("speechSynthesis" in window) {
+    try {
+      const utterance = new SpeechSynthesisUtterance(textToSay);
+      utterance.lang = "fil-PH";
+      utterance.pitch = 1.2;
+      utterance.rate = 0.9;
+      utterance.volume = 1.0;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.log("Text-to-speech error:", e);
+    }
+  }
+}
+
 // Auto-generate menu on page load
 document.addEventListener("DOMContentLoaded", () => {
   generateMenu();
 });
-
-//voice function
-function mamaSpeaks(textToSay) {
-  // 1. Check if the browser/phone supports text-to-speech
-  if ("speechSynthesis" in window) {
-    // 2. Create the speech object
-    const utterance = new SpeechSynthesisUtterance(textToSay);
-
-    // 3. Customize the voice!
-    // We can try to force a Filipino accent if the phone has one installed.
-    utterance.lang = "fil-PH"; // 'tl-PH' also works on some devices
-
-    // You can make her sound more intense by tweaking pitch and speed
-    utterance.pitch = 1.2; // Higher pitch (0 to 2)
-    utterance.rate = 0.6; // Slightly faster talking speed (0.1 to 10)
-    utterance.volume = 1.0; // Max volume (0 to 1)
-
-    // 4. Speak!
-    window.speechSynthesis.speak(utterance);
-  } else {
-    console.log("Text-to-speech is not supported on this device.");
-  }
-}
