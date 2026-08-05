@@ -369,6 +369,7 @@ function resetToMenu() {
   playSound();
   clearInterval(timer);
   resetBackground();
+  window.speechSynthesis.cancel(); //stops voice
   document
     .querySelectorAll(".screen")
     .forEach((s) => s.classList.remove("active"));
@@ -449,6 +450,8 @@ function loadLevel() {
   const questionText = document.getElementById("question-text");
   if (questionText) questionText.innerText = currentQ.text;
 
+  mamaSpeaks(currentQ.scenario);
+
   const optionsContainer = document.getElementById("options-container");
   const inputContainer = document.getElementById("input-container");
 
@@ -526,6 +529,8 @@ function checkSpelling() {
 }
 
 function checkAnswer(selected) {
+  window.speechSynthesis.cancel(); // stops speaking if the player already answers
+
   clearInterval(timer);
   const q = quests[currentLevel];
   const currentQ = questionBanks[q.type][currentQuestionIndex];
@@ -592,3 +597,26 @@ function resetBackground() {
 document.addEventListener("DOMContentLoaded", () => {
   generateMenu();
 });
+
+//voice function
+function mamaSpeaks(textToSay) {
+  // 1. Check if the browser/phone supports text-to-speech
+  if ("speechSynthesis" in window) {
+    // 2. Create the speech object
+    const utterance = new SpeechSynthesisUtterance(textToSay);
+
+    // 3. Customize the voice!
+    // We can try to force a Filipino accent if the phone has one installed.
+    utterance.lang = "fil-PH"; // 'tl-PH' also works on some devices
+
+    // You can make her sound more intense by tweaking pitch and speed
+    utterance.pitch = 1.2; // Higher pitch (0 to 2)
+    utterance.rate = 0.6; // Slightly faster talking speed (0.1 to 10)
+    utterance.volume = 1.0; // Max volume (0 to 1)
+
+    // 4. Speak!
+    window.speechSynthesis.speak(utterance);
+  } else {
+    console.log("Text-to-speech is not supported on this device.");
+  }
+}
