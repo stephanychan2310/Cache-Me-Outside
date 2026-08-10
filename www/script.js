@@ -137,7 +137,7 @@ const quests = [
   },
 ];
 
-const buttonSound = new Audio("sounds/btn-slick.wav");
+const buttonSound = new Audio("sounds/btn-sound.mp3");
 
 function playSound() {
   if (buttonSound.src && buttonSound.src !== window.location.href) {
@@ -149,6 +149,7 @@ let currentLevel = 0;
 let currentQuestionIndex = 0;
 let timer;
 let timeLeft;
+let Totaltimelimit;
 let maxLives = 3;
 let lives = maxLives;
 let currentPlayer = "Guest";
@@ -491,6 +492,7 @@ function loadLevel() {
 function startTimer(seconds) {
   clearInterval(timer);
   timeLeft = seconds;
+  Totaltimelimit = seconds;
   updateTimerUI();
 
   timer = setInterval(() => {
@@ -520,7 +522,22 @@ function startTimer(seconds) {
 
 function updateTimerUI() {
   const timerElem = document.getElementById("timer");
-  if (timerElem) timerElem.innerText = `⏳ ${timeLeft}s`;
+  const liquidElem = document.getElementById("time-liquid");
+
+  if (timerElem) timerElem.innerText = `${timeLeft}s`;
+  if (liquidElem && Totaltimelimit > 0) {
+    const elapsed = Totaltimelimit - timeLeft;
+    const percentage = (elapsed / Totaltimelimit) * 100;
+
+    liquidElem.style.width = percentage + "%";
+    let currentColor = "#2ecc71";
+    if (percentage >= 75) {
+      currentColor = "#e74c3c";
+    } else if (percentage >= 50) {
+      currentColor = "#e67e22";
+    }
+    liquidElem.style.backgroundColor = currentColor;
+  }
 }
 
 function checkSpelling() {
@@ -541,7 +558,15 @@ function checkAnswer(selected) {
   const q = quests[currentLevel];
   const currentQ = questionBanks[q.type][currentQuestionIndex];
 
-  if (selected.toLowerCase() === currentQ.answer.toLowerCase()) {
+  let isCorrect = false;
+  if (q.type === "Capitalization") {
+    isCorrect = (selected === currentQ.answer);
+  } else {
+    isCorrect = (selected.toLowerCase() === currentQ.answer.toLowerCase());
+  }
+
+
+  if (isCorrect) {
     currentQuestionIndex++;
     showNotification("CORRECT! 🎉", () => {
       loadLevel();
@@ -552,9 +577,9 @@ function checkAnswer(selected) {
     recordMistake(q.type);
 
     if (lives <= 0) {
-      triggerGameOver("Mali! " + currentQ.failMsg);
+      triggerGameOver("Wrong! " + currentQ.failMsg);
     } else {
-      showNotification("MALI!\n-1 ❤️", () => {
+      showNotification("Wrong!\n-1 ❤️", () => {
         loadLevel();
       });
     }

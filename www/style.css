@@ -66,10 +66,68 @@ h1 {
 #hud {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
+  gap: 15px;
   margin-bottom: 1.5rem;
   font-size: 1rem;
   color: #e74c3c;
+}
+
+#timer {
+  border: 2px solid #ffffff;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: #ff4757;
+  text-shadow: -1px -1px 0px #cccccc;
+}
+
+#time-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#timer-wrapper {
+  position: relative;
+  width: 140px;
+  height: 60px;
+  transform-origin: center center;
+}
+
+#liquid-bounds {
+  position: absolute;
+  left: 45px;
+  top: 20px;
+  width: 70px;
+  height: 18px;
+  border-radius: 10px 2px 2px 2px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+#time-liquid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%; 
+  background-color: #2ecc71;
+  transition: width 1s linear, background-color 0.5s ease;
+}
+
+#timer-graphic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transform: rotate(90deg) scale(1.5);
+  transform-origin: center center;
 }
 
 button {

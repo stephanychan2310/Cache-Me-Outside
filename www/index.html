@@ -59,7 +59,17 @@
         <div id="hud">
           <span id="level-title">Quest 1</span>
           <span id="hearts-display">❤️❤️❤️</span>
-          <span id="timer" class="pulse-anim">⏳ 15s</span>
+
+          <!--Timer-->
+          <div id="time-container">
+            <div id="timer-wrapper">
+              <div id="liquid-bounds">
+                <div id="time-liquid"></div>
+              </div>
+              <img src="images/timer-pic.png" id="timer-graphic">
+            </div>
+            <span id="timer" class="pulse-anim"> 15s</span>
+          </div>
           <button onclick="resetToMenu()" id="Exit">Exit</button>
         </div>
 
