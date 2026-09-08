@@ -259,6 +259,8 @@ let maxLives = 3;
 let lives = maxLives;
 let currentPlayer = "Guest";
 let isAnsweringBlocked = false;
+let activeQuests = [...quests];
+let isPlayAllMode = false;
 let mistakeDatabase = {
   Punctuation: 0,
   Capitalization: 0,
@@ -451,7 +453,31 @@ function generateMenu() {
 
 function startSpecificQuest(index) {
   playSound();
-  currentLevel = index;
+  isPlayAllMode = false;
+
+  activeQuests = [quests[index]];
+
+  currentLevel = 0;
+  currentQuestionIndex = 0;
+  lives = maxLives;
+  updateHeartsUI();
+
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  const gameScreen = document.getElementById("screen-game");
+  if (gameScreen) gameScreen.classList.add("active");
+
+  loadLevel();
+}
+
+function playAllShuffled() {
+  playSound();
+  isPlayAllMode = true;
+
+  activeQuests = shuffleArray([...quests]);
+
+  currentLevel = 0;
   currentQuestionIndex = 0;
   lives = maxLives;
   updateHeartsUI();
@@ -509,23 +535,30 @@ function openStats() {
 function loadLevel() {
   isAnsweringBlocked = false;
 
-  if (currentLevel >= quests.length) {
+  if (currentLevel >= activeQuests.length) {
     winGame();
     return;
   }
 
-  const q = quests[currentLevel];
+  const q = activeQuests[currentLevel];
   const bank = questionBanks[q.type];
 
   if (!bank || currentQuestionIndex >= bank.length) {
-    currentLevel++;
-    currentQuestionIndex = 0;
-    if (currentLevel >= quests.length) {
+    if (isPlayAllMode) {
+      currentLevel++;
+      currentQuestionIndex = 0;
+
+      if (currentLevel >= activeQuests.length) {
+        winGame();
+        return;
+      }
+      loadLevel();
+      return;
+    } else {
       winGame();
       return;
+
     }
-    loadLevel();
-    return;
   }
 
   const currentQ = bank[currentQuestionIndex];
@@ -610,7 +643,7 @@ function startTimer(seconds) {
       updateHeartsUI();
       stopSpeech();
 
-      const q = quests[currentLevel];
+      const q = activeQuests[currentLevel];
       const currentQ = questionBanks[q.type][currentQuestionIndex];
       recordMistake(q.type);
 
@@ -660,7 +693,7 @@ function checkAnswer(selected) {
   stopSpeech();
   clearInterval(timer);
 
-  const q = quests[currentLevel];
+  const q = activeQuests[currentLevel];
   const currentQ = questionBanks[q.type][currentQuestionIndex];
 
   let isCorrect = false;
