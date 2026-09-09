@@ -105,12 +105,68 @@ const questionBanks = {
       failMsg: "Official titles used before names must be capitalized!",
     },
     {
+      scenario: "You are looking for Mama.",
+      text: "You ask Aling Myrna if she saw Mama earlier this ____",
+      options: ["Tuesday", "tuesday"],
+      answer: "Tuesday",
+      timeLimit: 15,
+      failMsg: "Days of the week are always capitalized!",  
+    },
+    {
       scenario: "A driver offers you a ride home:",
       text: "A driver offers to take you on his ____.",
       options: ["tricycle", "Tricycle"],
       answer: "tricycle",
       timeLimit: 15,
       failMsg: "Common vehicle names should be in lowercase!",
+    },
+    {
+      scenario: "Your teacher gives your a school reminder.",
+      text: "Your teacher reminds you that your ____ class starts tomorrow.",
+      options: ["English", "english"],
+      answer: "English",
+      timeLimit: 15,
+      failMsg: "Languages like English are proper nouns and must be capitalized!", 
+    },
+    {
+      scenario: "Don't get distracted by what you see in the plaza. Get home by 4:00 PM!",
+      text: "You run past the plaza decorated for the upcoming ____ festival.",
+      options: ["Christmas", "christmas"],
+      answer: "Christmas",
+      timeLimit: 15,
+      failMsg: "Names of holidays are proper nouns and must be capitalized!",  
+    },
+    {
+      scenario: "You are passing by a church on your way home.",
+      text: "You see people gathering outside the ____ Jude Parish.",
+      options: ["saint", "Saint"],
+      answer: "Saint",
+      timeLimit: 15,
+      failMsg: "Specific names of institutions and saints are capitalized!",  
+    },
+    {
+      scenario: "Mama is already looking for you.",
+      text: "Mama texted: 'It is almost ____ o'clock! Where are you? ",
+      options: ["Five", "five"],
+      answer: "five",
+      timeLimit: 15,
+      failMsg: "Numbers written as words in a sentence are common words and do not need to be capitalized unless they start a sentence. ",  
+    },
+    {
+      scenario: "You are on your way to your neighborhood.",
+      text: "You cross the Pasig ____ Bridge to get to your neighborhood.",
+      options: ["River", "river"],
+      answer: "River",
+      timeLimit: 15,
+      failMsg: "Specific names of bodies of water that are part of a proper geographic name are capitalized!",  
+    },
+    {
+      scenario: "",
+      text: "You finally reach home and greet Mama a polite '____ afternoon!' ",
+      options: ["good", "Good"],
+      answer: "Good",
+      timeLimit: 15,
+      failMsg: "The first word inside a direct quote or dialogue is always capitalized!",  
     },
   ],
 
@@ -259,8 +315,6 @@ let maxLives = 3;
 let lives = maxLives;
 let currentPlayer = "Guest";
 let isAnsweringBlocked = false;
-let activeQuests = [...quests];
-let isPlayAllMode = false;
 let mistakeDatabase = {
   Punctuation: 0,
   Capitalization: 0,
@@ -304,6 +358,7 @@ function startGame() {
   const menuScreen = document.getElementById("screen-menu");
   if (menuScreen) menuScreen.classList.add("active");
   generateMenu();
+
 }
 
 function saveStatsToLocal() {
@@ -336,33 +391,39 @@ function renderStats(containerId) {
     btn.innerText = `👤 ${name}`;
     btn.className = "player-stat-btn";
 
-    const statsDiv = document.createElement("div");
-    statsDiv.style.display = "none";
-    statsDiv.className = "player-stat-box";
 
-    let totalMistakes = 0;
-    let html =
-      "<ul style='list-style:none; padding:0; line-height: 1.5; margin:0;'>";
+  /* updated stat part with transferred graphic elements to stle.css */
 
-    for (const [category, count] of Object.entries(stats)) {
-      html += `<li>${category} Errors: <span style="color:${count > 0 ? "#e74c3c" : "#2ecc71"}">${count}</span></li>`;
-      totalMistakes += count;
-    }
+  const statsDiv = document.createElement("div");
+  statsDiv.style.display = "none";
+  statsDiv.className = "player-stat-box";
 
-    html += "</ul>";
-    html += `<p style="text-align:center; margin-top:10px; color:#f1c40f;">Total Mistakes: ${totalMistakes}</p>`;
-    statsDiv.innerHTML = html;
+  let totalMistakes = 0;
+  let html =
+    "<ul style='list-style:none; padding:0; line-height: 1.5; margin:0;'>";
 
-    btn.onclick = () => {
-      playSound();
-      statsDiv.style.display =
-        statsDiv.style.display === "none" ? "block" : "none";
-    };
+  for (const [category, count] of Object.entries(stats)) {
+    const errorClass = count > 0 ? "stats-error-count has-errors" : "stats-error-count";
+    html += '<li>${category} Errors: <span class="${errorClass}">${count}</span></li>';
+    totalMistakes += count;
+  }
+
+  html += "</ul>";
+  html += '<p class="stats-total-text">Total Mistakes: ${totalMistakes}</p>';
+  statsDiv.innerHTML = html;
+
+  btn.onclick = () => {
+    playSound();
+    statsDiv.classList.toggle("hidden");
+  };
+
+  /* --- */
 
     container.appendChild(btn);
     container.appendChild(statsDiv);
   }
 }
+
 
 function clearHistory() {
   playSound();
@@ -396,21 +457,18 @@ function updateHeartsUI() {
   heartsDisplay.innerHTML = heartsHtml;
 }
 
+/* Edited notif */
 function showNotification(message, callback) {
-  const notifBox = document.getElementById("notification-box");
-  if (!notifBox) {
-    if (callback) callback();
-    return;
-  }
 
   notifBox.innerText = message;
-  notifBox.style.display = "block";
+  notifBox.classList.remove("hidden");
 
   setTimeout(() => {
-    notifBox.style.display = "none";
+    notifBox.classList.add("hidden");
     if (callback) callback();
   }, 1500);
 }
+/* -------- */
 
 // MENU LOGIC
 function openMenu() {
@@ -453,31 +511,7 @@ function generateMenu() {
 
 function startSpecificQuest(index) {
   playSound();
-  isPlayAllMode = false;
-
-  activeQuests = [quests[index]];
-
-  currentLevel = 0;
-  currentQuestionIndex = 0;
-  lives = maxLives;
-  updateHeartsUI();
-
-  document
-    .querySelectorAll(".screen")
-    .forEach((s) => s.classList.remove("active"));
-  const gameScreen = document.getElementById("screen-game");
-  if (gameScreen) gameScreen.classList.add("active");
-
-  loadLevel();
-}
-
-function playAllShuffled() {
-  playSound();
-  isPlayAllMode = true;
-
-  activeQuests = shuffleArray([...quests]);
-
-  currentLevel = 0;
+  currentLevel = index;
   currentQuestionIndex = 0;
   lives = maxLives;
   updateHeartsUI();
@@ -535,30 +569,23 @@ function openStats() {
 function loadLevel() {
   isAnsweringBlocked = false;
 
-  if (currentLevel >= activeQuests.length) {
+  if (currentLevel >= quests.length) {
     winGame();
     return;
   }
 
-  const q = activeQuests[currentLevel];
+  const q = quests[currentLevel];
   const bank = questionBanks[q.type];
 
   if (!bank || currentQuestionIndex >= bank.length) {
-    if (isPlayAllMode) {
-      currentLevel++;
-      currentQuestionIndex = 0;
-
-      if (currentLevel >= activeQuests.length) {
-        winGame();
-        return;
-      }
-      loadLevel();
-      return;
-    } else {
+    currentLevel++;
+    currentQuestionIndex = 0;
+    if (currentLevel >= quests.length) {
       winGame();
       return;
-
     }
+    loadLevel();
+    return;
   }
 
   const currentQ = bank[currentQuestionIndex];
@@ -594,10 +621,12 @@ function loadLevel() {
 
   if (optionsContainer) optionsContainer.innerHTML = "";
 
+/* edited Spelling on loadLevel() */
+
   if (q.type === "Spelling") {
-    if (optionsContainer) optionsContainer.style.display = "none";
-    if (inputContainer) {
-      inputContainer.style.display = "flex";
+    if (optionsContainer) optionsContainer.classList.remove("options-visible");
+    if(inputContainer) {
+      inputContainer.classList.add("input-visible");
       const spellingInput = document.getElementById("spelling-input");
       if (spellingInput) {
         spellingInput.value = "";
@@ -605,10 +634,10 @@ function loadLevel() {
       }
     }
   } else {
-    if (inputContainer) inputContainer.style.display = "none";
+    if (inputContainer) inputContainer.classList.remove("input-visible");
     if (optionsContainer) {
-      optionsContainer.style.display = "flex";
-
+      optionsContainer.classList.add("options-visible");
+  
       const randomizedOptions = [...currentQ.options];
       shuffleArray(randomizedOptions);
 
@@ -643,7 +672,7 @@ function startTimer(seconds) {
       updateHeartsUI();
       stopSpeech();
 
-      const q = activeQuests[currentLevel];
+      const q = quests[currentLevel];
       const currentQ = questionBanks[q.type][currentQuestionIndex];
       recordMistake(q.type);
 
@@ -667,14 +696,17 @@ function updateTimerUI() {
     const elapsed = Totaltimelimit - timeLeft;
     const percentage = (elapsed / Totaltimelimit) * 100;
 
+
     liquidElem.style.width = percentage + "%";
-    let currentColor = "#2ecc71";
+    liquidElem.classList.remove("liquid-normal", "liquid-warning", "liquid-danger");
+
     if (percentage >= 75) {
-      currentColor = "#e74c3c";
+      liquidElem.classList.add("liquid-danger");
     } else if (percentage >= 50) {
-      currentColor = "#e67e22";
-    }
-    liquidElem.style.backgroundColor = currentColor;
+      liquidElem.classList.add("liquid-warning");
+    } else {
+      liquidElem.classList.add("liquid-normal");
+    } 
   }
 }
 
@@ -693,7 +725,7 @@ function checkAnswer(selected) {
   stopSpeech();
   clearInterval(timer);
 
-  const q = activeQuests[currentLevel];
+  const q = quests[currentLevel];
   const currentQ = questionBanks[q.type][currentQuestionIndex];
 
   let isCorrect = false;
@@ -792,7 +824,16 @@ function mamaSpeaks(textToSay) {
   }
 }
 
-// Auto-generate menu on page load
+// Auto-generate menu & listen for Enter key on page load
 document.addEventListener("DOMContentLoaded", () => {
   generateMenu();
+
+  const nameInput = document.getElementById("name-input");
+  if (nameInput) {
+    nameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        startGame();
+      }
+    });
+  }
 });
