@@ -14,21 +14,37 @@
     <div id="game-container">
       <!-- START SCREEN -->
       <div id="screen-start" class="screen active">
-        <h1>UTOS NI MAMA</h1>
-        <p>An English-Filipino RPG Quests</p>
-        <img
-          src="images/mama.png"
-          id="mama-start"
-          onerror="this.style.display = 'none'"
-        />
-        <input
-          type="text"
-          id="name-input"
-          placeholder="Enter your name"
-          style="margin-bottom: 10px; max-width: 300px"
-        />
-        <button onclick="startGame()">START QUEST</button>
-      </div>
+        <div class="tv-stage">
+          <!-- The White Inner Screen Area of the TV -->
+          <div class="tv-screen-area">
+            <img id="title-logo" src="images/logo-name.png" alt="Utos ni Mama Logo" />
+            <img id="title-mama" src="images/mama.png" alt="Mama" />
+            
+            <!-- Embedded Name Input -->
+            <div id="title-input-wrapper">
+              <input
+                type="text"
+                id="name-input"
+                placeholder="Hello, what's your name?"
+                maxlength="12"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <!-- Remote on bottom-right table -->
+          <div id="remote-control">
+            <img id="remote-img" src="images/remote.png" alt="Remote" />
+            <!-- Red remote button layered on top -->
+            <button
+              id="remote-power-btn"
+              title="Start Quest"
+              onclick="startGame()"
+              aria-label="Start Quest"
+            ></button>
+          </div>
+        </div>
+      </div> <!-- Correctly closing #screen-start -->
 
       <!-- SELECT MENU -->
       <div id="screen-menu" class="screen">
@@ -40,9 +56,6 @@
         <h1>MGA UTOS</h1>
         <p>Choose a task from Mama:</p>
         <div id="quest-grid"></div>
-
-        <button onclick="playAllShuffled()" class="back-btn">PLAY ALL</button>
-
         <button onclick="resetToStart()" class="back-btn">BACK TO TITLE</button>
       </div>
 
@@ -69,11 +82,16 @@
               <div id="liquid-bounds">
                 <div id="time-liquid"></div>
               </div>
-              <img src="images/timer-pic.png" id="timer-graphic">
+              <img src="images/timer-pic.png" id="timer-graphic" />
             </div>
             <span id="timer" class="pulse-anim"> 15s</span>
           </div>
           <button onclick="resetToMenu()" id="Exit">Exit</button>
+        </div>
+
+        <!-- Pop-up Mama Reaction Container for In-Game Answers -->
+        <div id="mama-feedback-popup" class="hidden">
+          <img id="mama-feedback-img" src="" alt="Mama Reaction" />
         </div>
 
         <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
@@ -94,7 +112,10 @@
           />
           <button onclick="checkSpelling()">SUBMIT</button>
         </div>
-      </div>
+      </div> <!-- Closes #screen-game -->
+
+      <!-- GAME OVER SCREEN -->
+      <div id="screen-gameover" class="screen">
 
       <!-- GAME OVER SCREEN -->
       <div id="screen-gameover" class="screen">

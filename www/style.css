@@ -1,3 +1,8 @@
+/* --- Global Reset & Window Fit --- */
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #1a1a24;
   color: #ffffff;
@@ -5,58 +10,194 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: auto;
-  min-height: 100vh;
+  height: 100vh;
   margin: 0;
-  padding: 1rem;
-  box-sizing: border-box;
+  padding: 0;
+  overflow: hidden; /* Prevent window scrollbars */
 }
 
 #game-container {
-  width: 100%;
-  max-width: 800px;
-  min-height: 600px;
+  /* Locks strictly to a 4:3 ratio so TV elements NEVER drift when resizing */
+  width: min(100vw, calc(100vh * 4 / 3), 800px);
+  height: min(100vh, calc(100vw * 0.75), 600px);
+  aspect-ratio: 4 / 3;
   background-color: #2b2b36;
   border: 6px solid #d35400;
-  box-shadow: 10px 10px 0px #000000;
+  box-shadow: 0 0 20px #000000;
   position: relative;
   text-align: center;
   display: flex;
   flex-direction: column;
-}
-
-#screen-start {
-  position: relative;
-}
-
-#mama {
-  position: center;
-  top: 350px;
-  bottom: 0;
-  width: 200px;
-  height: 200px;
+  overflow: hidden; /* Fits everything within screen limits */
+  box-sizing: border-box;
 }
 
 .screen {
   display: none;
-  padding: 2rem;
+  padding: 1.5rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-.active {
+.screen.active {
   display: flex;
 }
 
+/* ==========================================
+   TV TITLE SCREEN
+   ========================================== */
+#screen-start {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background-image: url("images/tvnamaybg.png");
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: none;
+  overflow: hidden;
+}
+
+#screen-start.active {
+  display: block;
+}
+
+.tv-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Precisely covers the white tube screen of the TV */
+.tv-screen-area {
+  position: absolute;
+  top: 23%;
+  left: 35%;
+  width: 45%;
+  height: 48%;
+  box-sizing: border-box;
+}
+
+/* Logo on the left inside the TV */
+#title-logo {
+  position: absolute;
+  top: 6%;
+  left: 0%;
+  width: 55%;
+  max-width: 210px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: popIn 0.5s ease-out forwards;
+}
+
+/* Mama standing beside the logo on the right */
+#title-mama {
+  position: absolute;
+  top: 15%;
+  right: 4%;
+  width: 46%;
+  height: 56%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: popIn 0.5s ease-out 0.2s both;
+}
+
+/* Enter name bar: centered cleanly at the lower part of the white screen */
+#title-input-wrapper {
+  position: absolute;
+  bottom: -15%;
+  left: -20%;
+  transform: translateX(-50%);
+  width: 90%;
+  z-index: 5;
+  animation: popIn 0.5s ease-out 0.4s both;
+}
+
+/* Retained your custom color adjustments */
+#title-input-wrapper input {
+  width: 100%;
+  padding: 8px 6px;
+  font-size: 0.65rem;
+  background: rgb(194, 146, 25);
+  border: 3px solid rgb(51, 26, 2);
+  color: #303030;
+  text-align: center;
+  margin: 0;
+  box-shadow: 3px 3px 0px #000000;
+}
+
+#title-input-wrapper input::placeholder {
+  color: #181818;
+  font-size: 0.55rem;
+}
+
+/* --- Remote Control on Right Table --- */
+#remote-control {
+  position: absolute;
+  right: 2%;
+  bottom: -4%;
+  width: 60%;
+  max-width: 350px;
+  animation: slideUpRemote 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0.5s both;
+  z-index: 10;
+}
+
+#remote-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* Red button layered directly over the remote's printed power circle */
+#remote-power-btn {
+  position: absolute;
+  top: 31%;
+  left: 57%;
+  transform: translateX(-50%);
+  width: 18%;
+  aspect-ratio: 1 / 1;
+  background-image: url("images/button.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  z-index: 15;
+  image-rendering: pixelated;
+  animation: pulseGlow 1.4s infinite alternate;
+}
+
+#remote-power-btn:hover {
+  transform: translateX(-50%) scale(1.15);
+  filter: brightness(1.25);
+}
+
+#remote-power-btn:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+/* ==========================================
+   GAMEPLAY, HUD & MENUS
+   ========================================== */
 h1 {
   color: #f1c40f;
   text-shadow: 4px 4px #d35400;
-  line-height: 1.5;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  line-height: 1.4;
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
 }
 
 .highlight {
@@ -69,14 +210,14 @@ h1 {
   align-items: center;
   width: 100%;
   gap: 15px;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
   color: #e74c3c;
 }
 
 #timer {
   border: 2px solid #ffffff;
-  padding: 5px 10px;
+  padding: 4px 8px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   color: #ff4757;
@@ -86,22 +227,22 @@ h1 {
 #time-container {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 #timer-wrapper {
   position: relative;
   width: 140px;
-  height: 60px;
+  height: 50px;
   transform-origin: center center;
 }
 
 #liquid-bounds {
   position: absolute;
   left: 45px;
-  top: 20px;
+  top: 16px;
   width: 70px;
-  height: 18px;
+  height: 16px;
   border-radius: 10px 2px 2px 2px;
   overflow: hidden;
   z-index: 1;
@@ -113,7 +254,6 @@ h1 {
   left: 0;
   width: 0%;
   height: 100%; 
-  background-color: #2ecc71;
   transition: width 1s linear, background-color 0.5s ease;
 }
 
@@ -126,7 +266,7 @@ h1 {
   z-index: 2;
   object-fit: contain;
   image-rendering: pixelated;
-  transform: rotate(90deg) scale(1.5);
+  transform: rotate(90deg) scale(1.4);
   transform-origin: center center;
 }
 
@@ -134,13 +274,12 @@ button {
   background-color: #d35400;
   color: white;
   font-family: "Press Start 2P", cursive;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   line-height: 1.5;
   border: 4px solid #ffffff;
-  padding: 1rem;
-  margin: 0.5rem;
+  padding: 0.8rem;
+  margin: 0.4rem;
   cursor: pointer;
-  box-shadow: 4px 4px 0px #000000;
   text-transform: uppercase;
 }
 
@@ -148,43 +287,69 @@ button:hover {
   background-color: #e67e22;
 }
 
-button:focus {
-  background-color: #e67e22;
-  border: inset;
-}
-
 input[type="text"] {
   font-family: "Press Start 2P", cursive;
-  font-size: 1rem;
-  padding: 1rem;
+  font-size: 0.85rem;
+  padding: 0.8rem;
   border: 4px solid #ffffff;
   background: #000;
   color: #fff;
   text-align: center;
   margin-bottom: 10px;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .pixel-sprite {
-  font-size: 5rem;
-  margin-bottom: 1rem;
+  font-size: 2.4rem;
+  margin-bottom: 0.3rem;
 }
 
+/* ==========================================
+   CHATBOX & QUESTION TEXT ADJUSTMENT
+   ========================================== */
 #dialog-box {
-  background-color: #000000;
-  border: 4px solid #ffffff;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  width: 100%;
+  background-image: url("images/chatboxlegit.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+
+  width: 95%;
+  max-width: 720px;
+  min-height: 140px;
+  height: auto;
+  flex-shrink: 0;
+
+  /* Padding keeps the text within the bubble while leaving room for the buttons below */
+  padding: 1.2rem 2.2rem 1.8rem 2.2rem;
+  margin-bottom: 0.5rem;
   box-sizing: border-box;
-  line-height: 1.6;
-  font-size: 0.8rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  image-rendering: pixelated;
 }
 
 #scenario-text {
-  margin-bottom: 1rem;
-  overflow: auto;
+  margin: 0 0 0.3rem 0;
+  color: #ffffff;
+  font-size: 0.52rem;
+  line-height: 1.4;
+  text-shadow: 2px 2px 0px #000000;
+  max-width: 95%;
+}
+
+#question-text {
+  margin: 0;
+  color: #f1c40f;
+  font-size: 0.55rem;
+  line-height: 1.4;
+  text-shadow: 2px 2px 0px #000000;
+  max-width: 95%;
 }
 
 #options-container,
@@ -192,99 +357,30 @@ input[type="text"] {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  overflow: auto;
   gap: 10px;
   width: 100%;
 }
 
-.bounce-anim {
-  animation: bounce 1s infinite alternate;
-}
-/* CORRECTED: Removed '0%' and '100%' next to 'from' and 'to' */
-@keyframes bounce {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-15px);
-  }
-}
-
-.pulse-anim {
-  animation: pulse 0.5s infinite alternate;
-}
-/* CORRECTED: Removed '0%' and '100%' next to 'from' and 'to' */
-@keyframes pulse {
-  from {
-    transform: scale(1);
-    color: #e74c3c;
-  }
-  to {
-    transform: scale(1.1);
-    color: #c0392b;
-  }
-}
-
-.shake-anim {
-  animation: shake 0.3s infinite;
-}
-@keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  50% {
-    transform: translateX(5px);
-  }
-  75% {
-    transform: translateX(-5px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@media (max-width: 600px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-  #hud {
-    font-size: 0.8rem;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-  #dialog-box {
-    font-size: 0.7rem;
-    padding: 1rem;
-  }
-  button {
-    font-size: 0.7rem;
-    padding: 0.8rem;
-    width: 100%;
-  }
-}
 #quest-grid {
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  max-height: 260px;
+  overflow-y: auto;
 }
 
 .quest-btn {
-  font-size: 0.7rem;
-  padding: 1rem;
+  font-size: 0.65rem;
+  padding: 0.8rem;
   width: 100%;
   text-align: left;
-  overflow: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #27ae60;
+  text-transform: none !important;
 }
 
 .quest-btn:hover {
@@ -292,7 +388,7 @@ input[type="text"] {
 }
 
 .quest-sprite {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .back-btn {
@@ -303,19 +399,8 @@ input[type="text"] {
   background-color: #95a5a6;
 }
 
-#flee-btn {
-  padding: 0.5rem;
-  font-size: 0.6rem;
-  margin: 0;
-  background-color: #c0392b;
-}
-
-#flee-btn:hover {
-  background-color: #e74c3c;
-}
-
 #Exit {
-  padding: 0.5rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.6rem;
   margin: 0;
   background-color: #c0392b;
@@ -325,63 +410,58 @@ input[type="text"] {
   background-color: #e74c3c;
 }
 
-#notification-box {
+#stats-btn,
+#shuffle-btn {
   position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #c0392b;
-  color: #ffffff;
-  padding: 1.5rem;
-  border: 4px solid #ffffff;
-  box-shadow: 5px 5px 0px #000000;
-  z-index: 10;
-  font-size: 1.2rem;
-  text-align: center;
-  line-height: 1.5;
-  animation: shake 0.3s infinite;
+  top: 15px;
+  font-size: 0.65rem;
+  padding: 0.5rem;
+  margin: 0;
+  box-shadow: 3px 3px 0px #000000;
 }
 
 #stats-btn {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 100%;
-  width: fit-content;
-  top: 15px;
   right: 15px;
   background-color: #3498db;
-  font-size: 0.7rem;
-  padding: 0.6rem;
-  margin: 0;
-  box-shadow: 3px 3px 0px #000000;
-}
-
-#stats-btn:hover {
-  background-color: #2980b9;
-}
-
-#screen-menu h1 {
-  margin-top: 60px;
 }
 
 #shuffle-btn {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 100%;
-  width: fit-content;
-  top: 15px;
   left: 15px;
   background-color: #8e44ad;
-  font-size: 0.7rem;
-  padding: 0.6rem;
-  margin: 0;
-  box-shadow: 3px 3px 0px #000000;
 }
 
-#shuffle-btn:hover {
-  background-color: #9b59b6;
+#screen-menu h1 {
+  margin-top: 40px;
+}
+
+/* Gameplay Category Backgrounds */
+#game-container.bg-punctuation {
+  background-image: url("images/Punctuation.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#game-container.bg-capitalization {
+  background-image: url("images/Capitalization.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#game-container.bg-spelling {
+  background-image: url("images/Spelling.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#game-container.bg-reading {
+  background-image: url("images/Reading-Comp.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#game-container.bg-default {
+  background-color: #2b2b36;
+  background-image: none;
 }
 
 #screen-gameover {
@@ -396,77 +476,119 @@ input[type="text"] {
   background-repeat: no-repeat;
 }
 
-#game-container.bg-punctuation {
-  background-image: url("images/Punctuation.png");
-  background-size: cover;
-  background-position: center;
-  background-blend-mode: normal;
+/* ==========================================
+   ANIMATIONS & UTILITIES
+   ========================================== */
+.hidden {
+  display: none !important;
 }
 
-#game-container.bg-capitalization {
-  background-image: url("images/Capitalization.png");
-  background-size: cover;
-  background-position: center;
-  background-blend-mode: normal;
-}
-
-#game-container.bg-spelling {
-  background-image: url("images/Spelling.png");
-  background-size: cover;
-  background-position: center;
-  background-blend-mode: normal;
-}
-
-#game-container.bg-reading {
-  background-image: url("images/Reading-Comp.png");
-  background-size: cover;
-  background-position: center;
-  background-blend-mode: normal;
-}
-
-#game-container.bg-default {
-  background-color: #2b2b36;
-  background-image: none;
-}
-
-#options-container button,
-.quest-btn {
-  text-transform: none !important;
-}
-
-.player-stat-btn {
-  width: 100%;
-  background-color: #8e44ad;
-  text-align: left;
-  margin-top: 10px;
+#options-container.options-visible,
+#input-container.input-visible {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-.player-stat-btn:hover {
-  background-color: #9b59b6;
-}
-
-.player-stat-box {
-  background-color: #000000;
-  border: 4px solid #ffffff;
-  padding: 1.5rem;
-  margin-bottom: 15px;
-  text-align: left;
-  font-size: 0.7rem;
-  box-shadow: inset 4px 4px 0px #333333;
-}
-
-.player-stat-box ul {
+.stats-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  line-height: 1.8;
+  line-height: 1.5;
 }
 
-.player-stat-box li {
-  margin-bottom: 8px;
-  border-bottom: 2px dashed #333;
-  padding-bottom: 5px;
+.stats-error-count {
+  color: #2ecc71;
+}
+
+.stats-error-count.has-errors {
+  color: #e74c3c;
+}
+
+.stats-total-text {
+  text-align: center;
+  margin-top: 10px;
+  color: #f1c40f;
+}
+
+.liquid-normal {
+  background-color: #2ecc71;
+}
+
+.liquid-warning {
+  background-color: #e67e22;
+}
+
+.liquid-danger {
+  background-color: #e74c3c;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUpRemote {
+  0% {
+    transform: translateY(120%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes pulseGlow {
+  from {
+    filter: drop-shadow(0 0 2px rgba(231, 76, 60, 0.4));
+  }
+  to {
+    filter: drop-shadow(0 0 8px rgba(231, 76, 60, 1));
+  }
+}
+
+.bounce-anim {
+  animation: bounce 1s infinite alternate;
+}
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-12px); }
+}
+
+.pulse-anim {
+  animation: pulse 0.5s infinite alternate;
+}
+@keyframes pulse {
+  from { transform: scale(1); color: #e74c3c; }
+  to { transform: scale(1.08); color: #c0392b; }
+}
+
+.shake-anim {
+  animation: shake 0.3s infinite;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+/* Mobile responsive scaling */
+@media (max-width: 600px) {
+  h1 { font-size: 1.2rem; }
+  #hud { font-size: 0.75rem; }
+  #dialog-box { font-size: 0.62rem; padding: 1.2rem 1.6rem; min-height: 120px; max-width: 95%; }
+  button { font-size: 0.65rem; padding: 0.6rem; }
+  .tv-screen-area {
+    top: 25%;
+    left: 28%;
+    width: 48%;
+    height: 48%;
+  }
+  #title-input-wrapper input {
+    font-size: 0.45rem;
+  }
 }
