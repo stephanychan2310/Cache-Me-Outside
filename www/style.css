@@ -99,7 +99,7 @@ body {
   height: 100%;
 }
 
-/* Precisely covers the white tube screen of the TV */
+/* Covers the white tube screen of the TV */
 .tv-screen-area {
   position: absolute;
   top: 23%;
@@ -133,7 +133,7 @@ body {
   animation: popIn 0.5s ease-out 0.2s both;
 }
 
-/* Enter name bar: centered cleanly at the lower part of the white screen */
+/* Enter name bar */
 #title-input-wrapper {
   position: absolute;
   bottom: 10%;
@@ -163,7 +163,7 @@ body {
   font-size: 0.55rem;
 }
 
-/* --- Remote Control on Right Table --- */
+/* Remote Control on Right Table */
 #remote-control {
   position: absolute;
   right: 0%;
