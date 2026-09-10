@@ -17,17 +17,14 @@
         <div class="tv-stage">
           <!-- The White Inner Screen Area of the TV -->
           <div class="tv-screen-area">
-            <img id="title-logo" src="images/logo-name.png" alt="Utos ni Mama Logo" />
+            <img id="title-logo" src="images/logo-name.png" alt="Utos ni Mama" />
             <img id="title-mama" src="images/mama.png" alt="Mama" />
             
             <!-- Embedded Name Input -->
             <div id="title-input-wrapper">
               <input
-                type="text"
-                id="name-input"
-                placeholder="Hello, what's your name?"
-                maxlength="12"
-                autocomplete="off"
+                type="text" id="name-input" placeholder="Hello, what's your name?"
+                maxlength="12" autocomplete="off"
               />
             </div>
           </div>
@@ -36,21 +33,21 @@
           <div id="remote-control">
             <img id="remote-img" src="images/remote.png" alt="Remote" />
             <!-- Red remote button layered on top -->
+             <p id="remote-instruction">PRESS TO START</p>
             <button
-              id="remote-power-btn"
-              title="Start Quest"
-              onclick="startGame()"
-              aria-label="Start Quest"
+              id="remote-power-btn" title="Start Quest" 
+              onclick="startGame()" aria-label="Start Quest"
             ></button>
           </div>
         </div>
-      </div> <!-- Correctly closing #screen-start -->
+      </div>
 
       <!-- SELECT MENU -->
       <div id="screen-menu" class="screen">
-        <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">
-          🔀 SHUFFLE
-        </button>
+        <div id="top-left-controls">
+          <button onclick="playAllShuffled()" id="play-all-btn">▶ PLAY ALL</button>
+          <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">🔀 SHUFFLE</button>
+        </div>
         <button onclick="openStats()" id="stats-btn">📊 STATS</button>
 
         <h1>MGA UTOS</h1>
@@ -102,7 +99,7 @@
         </div>
 
         <div id="options-container"></div>
-        <div id="input-container" style="display: none">
+        <div id="input-container">
           <input
             type="text"
             id="spelling-input"
@@ -112,17 +109,13 @@
           />
           <button onclick="checkSpelling()">SUBMIT</button>
         </div>
-      </div> <!-- Closes #screen-game -->
-
-      <!-- GAME OVER SCREEN -->
-      <div id="screen-gameover" class="screen">
+      </div>
 
       <!-- GAME OVER SCREEN -->
       <div id="screen-gameover" class="screen">
         <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
         <p id="gameover-reason"></p>
-        <img
-          src="images/mama-gameover.png"
+        <img src="images/mama-gameover.png"
           id="mama-gameover"
           onerror="this.style.display = 'none'"
         />
@@ -133,8 +126,7 @@
       <div id="screen-victory" class="screen">
         <h1>GOOD JOB, ANAK!</h1>
         <p>You survived Mama's tasks.</p>
-        <img
-          src="images/mama-happy.png"
+        <img src="images/mama-happy.png"
           id="mama-happy"
           onerror="this.style.display = 'none'"
         />

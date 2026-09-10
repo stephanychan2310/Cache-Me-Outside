@@ -10,7 +10,7 @@ const questionBanks = {
       options: ["?", "!", "."],
       answer: "?",
       timeLimit: 15,
-      failMsg: "Don't yell at me! ('!' sounds like backtalk)",
+      failMsg: "Don't yell at me! \n('!' sounds like backtalk)",
     },
     {
       scenario: "Apologizing to Mama after breaking a glass:",
@@ -18,7 +18,7 @@ const questionBanks = {
       options: [".", "?", ","],
       answer: ".",
       timeLimit: 15,
-      failMsg: "Are you asking or apologizing? Use a period!",
+      failMsg: "Are you asking or apologizing? \nUse a period!",
     },
     {
       scenario: "Expressing shock when Mama holds her slipper (tsinelas):",
@@ -42,7 +42,7 @@ const questionBanks = {
       options: [",", "?", "!"],
       answer: "!",
       timeLimit: 15,
-      failMsg: "Don't sound hesitant about my cooking! ('?' gives a doubtful tone)",
+      failMsg: "Don't sound hesitant about my cooking! \n('?' gives a doubtful tone)",
     },
     {
       scenario: "Asking permission to play outside:",
@@ -50,7 +50,7 @@ const questionBanks = {
       options: [",", "?", "."],
       answer: "?",
       timeLimit: 15,
-      failMsg: "Don't demand things from me! ('!' makes it sound like an order)",
+      failMsg: "Don't demand things from me! \n('!' makes it sound like an order)",
     },
     {
       scenario: "Direct quotation / Answering Mama's question:",
@@ -74,7 +74,7 @@ const questionBanks = {
       options: ["?", ".", "!"],
       answer: ".",
       timeLimit: 15,
-      failMsg: "Don't raise your voice! A period is enough.",
+      failMsg: "Don't raise your voice! \nA period is enough.",
     },
     {
       scenario: "A compound sentence with a conjunction:",
@@ -150,7 +150,7 @@ const questionBanks = {
       options: ["Five", "five"],
       answer: "five",
       timeLimit: 15,
-      failMsg: "Numbers written as words in a sentence are common words and do not need to be capitalized unless they start a sentence. ",  
+      failMsg: "Numbers written as words in a sentence are common words. \nThey do not need to be capitalized unless they start a sentence. ",  
     },
     {
       scenario: "You are on your way to your neighborhood.",
@@ -239,7 +239,7 @@ const questionBanks = {
       text: "Mom wrote: 'Buy a bar of CHOCLATE for your younger sibling.'.  Type the correct spelling:",
       answer: "Chocolate",
       timeLimit: 20,
-      failMsg: "Don't skip the hidden middle syllable! Choc-o-late has an 'o' in the middle (choc-O-late)!",
+      failMsg: "Don't skip the hidden middle syllable! \nChoc-o-late has an 'o' in the middle (choc-O-late)!",
     },
   ],
 
@@ -299,10 +299,19 @@ const quests = [
 ];
 
 const buttonSound = new Audio("sounds/btn-sound.mp3");
+const wrongSound = new Audio("sounds/uhoh.mp3");
+
+let bgMusic = null;
 
 function playSound() {
   if (buttonSound.src && buttonSound.src !== window.location.href) {
     buttonSound.play().catch((e) => console.log("Audio play suppressed"));
+  }
+}
+
+function playWrongSound() {
+  if (wrongSound.src && wrongSound.src !== window.location.href) {
+    wrongSound.play().catch((e) => console.log("Audio play suppressed"));
   }
 }
 
@@ -314,7 +323,10 @@ let Totaltimelimit;
 let maxLives = 3;
 let lives = maxLives;
 let currentPlayer = "Guest";
+let isBgMusicPlaying = false;
 let isAnsweringBlocked = false;
+let activeQuests = [...quests];
+let isPlayAllMode = false;
 let mistakeDatabase = {
   Punctuation: 0,
   Capitalization: 0,
@@ -335,6 +347,8 @@ function getSafeHistory() {
 
 function startGame() {
   playSound();
+  startBgMusic();
+
   const nameInput = document.getElementById("name-input");
   currentPlayer = nameInput ? nameInput.value.trim() || "Guest" : "Guest";
 
@@ -391,12 +405,8 @@ function renderStats(containerId) {
     btn.innerText = `👤 ${name}`;
     btn.className = "player-stat-btn";
 
-
-  /* updated stat part with transferred graphic elements to stle.css */
-
-  const statsDiv = document.createElement("div");
-  statsDiv.style.display = "none";
-  statsDiv.className = "player-stat-box";
+    const statsDiv = document.createElement("div");
+    statsDiv.className = "player-stat-box hidden";
 
   let totalMistakes = 0;
   let html =
@@ -404,20 +414,18 @@ function renderStats(containerId) {
 
   for (const [category, count] of Object.entries(stats)) {
     const errorClass = count > 0 ? "stats-error-count has-errors" : "stats-error-count";
-    html += '<li>${category} Errors: <span class="${errorClass}">${count}</span></li>';
+    html += `<li>${category} Errors: <span class="${errorClass}">${count}</span></li>`;
     totalMistakes += count;
   }
 
   html += "</ul>";
-  html += '<p class="stats-total-text">Total Mistakes: ${totalMistakes}</p>';
+  html += `<p class="stats-total-text">Total Mistakes: ${totalMistakes}</p>`;
   statsDiv.innerHTML = html;
 
   btn.onclick = () => {
     playSound();
     statsDiv.classList.toggle("hidden");
   };
-
-  /* --- */
 
     container.appendChild(btn);
     container.appendChild(statsDiv);
@@ -457,18 +465,21 @@ function updateHeartsUI() {
   heartsDisplay.innerHTML = heartsHtml;
 }
 
-/* Edited notif */
 function showNotification(message, callback) {
+  const notifBox = document.getElementById("notification-box");
+  if (!notifBox) {
+    if (callback) callback();
+    return;
+  }
 
   notifBox.innerText = message;
-  notifBox.classList.remove("hidden");
+  notifBox.style.display = "block";
 
   setTimeout(() => {
-    notifBox.classList.add("hidden");
+    notifBox.style.display = "none";
     if (callback) callback();
   }, 1500);
 }
-/* -------- */
 
 // MENU LOGIC
 function openMenu() {
@@ -511,7 +522,27 @@ function generateMenu() {
 
 function startSpecificQuest(index) {
   playSound();
-  currentLevel = index;
+  isPlayAllMode = false;
+  activeQuests = [quests[index]];
+  currentLevel = 0;
+  currentQuestionIndex = 0;
+  lives = maxLives;
+  updateHeartsUI();
+
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  const gameScreen = document.getElementById("screen-game");
+  if (gameScreen) gameScreen.classList.add("active");
+
+  loadLevel();
+}
+
+function playAllShuffled() {
+  playSound();
+  isPlayAllMode = true;
+  activeQuests = shuffleArray([...quests]);
+  currentLevel = 0;
   currentQuestionIndex = 0;
   lives = maxLives;
   updateHeartsUI();
@@ -569,23 +600,29 @@ function openStats() {
 function loadLevel() {
   isAnsweringBlocked = false;
 
-  if (currentLevel >= quests.length) {
+  if (currentLevel >= activeQuests.length) {
     winGame();
     return;
   }
 
-  const q = quests[currentLevel];
+  const q = activeQuests[currentLevel];
   const bank = questionBanks[q.type];
 
   if (!bank || currentQuestionIndex >= bank.length) {
-    currentLevel++;
-    currentQuestionIndex = 0;
-    if (currentLevel >= quests.length) {
+    if (isPlayAllMode) {
+      currentLevel++;
+      currentQuestionIndex = 0;
+
+      if (currentLevel >= activeQuests.length) {
+        winGame();
+        return;
+      }
+      loadLevel();
+      return;
+    } else {
       winGame();
       return;
     }
-    loadLevel();
-    return;
   }
 
   const currentQ = bank[currentQuestionIndex];
@@ -620,8 +657,6 @@ function loadLevel() {
   const inputContainer = document.getElementById("input-container");
 
   if (optionsContainer) optionsContainer.innerHTML = "";
-
-/* edited Spelling on loadLevel() */
 
   if (q.type === "Spelling") {
     if (optionsContainer) optionsContainer.classList.remove("options-visible");
@@ -672,9 +707,11 @@ function startTimer(seconds) {
       updateHeartsUI();
       stopSpeech();
 
-      const q = quests[currentLevel];
+      const q = activeQuests[currentLevel];
       const currentQ = questionBanks[q.type][currentQuestionIndex];
       recordMistake(q.type);
+
+      playWrongSound();
 
       if (lives <= 0) {
         triggerGameOver("Time's up! " + currentQ.failMsg);
@@ -693,20 +730,18 @@ function updateTimerUI() {
 
   if (timerElem) timerElem.innerText = `${timeLeft}s`;
   if (liquidElem && Totaltimelimit > 0) {
-    const elapsed = Totaltimelimit - timeLeft;
-    const percentage = (elapsed / Totaltimelimit) * 100;
-
+    const percentage = (timeLeft / Totaltimelimit) * 100;
 
     liquidElem.style.width = percentage + "%";
     liquidElem.classList.remove("liquid-normal", "liquid-warning", "liquid-danger");
 
-    if (percentage >= 75) {
-      liquidElem.classList.add("liquid-danger");
-    } else if (percentage >= 50) {
-      liquidElem.classList.add("liquid-warning");
+    if (percentage > 50) {
+      liquidElem.style.backgroundColor = "#2ecc71";
+    } else if (percentage > 25) {
+      liquidElem.style.backgroundColor = "#f1c40f";
     } else {
-      liquidElem.classList.add("liquid-normal");
-    } 
+      liquidElem.style.backgroundColor = "#e74c3c";
+    }
   }
 }
 
@@ -725,7 +760,7 @@ function checkAnswer(selected) {
   stopSpeech();
   clearInterval(timer);
 
-  const q = quests[currentLevel];
+  const q = activeQuests[currentLevel];
   const currentQ = questionBanks[q.type][currentQuestionIndex];
 
   let isCorrect = false;
@@ -745,6 +780,8 @@ function checkAnswer(selected) {
     lives--;
     updateHeartsUI();
     recordMistake(q.type);
+
+    playWrongSound();
 
     if (lives <= 0) {
       triggerGameOver("Wrong! " + currentQ.failMsg);
@@ -824,9 +861,103 @@ function mamaSpeaks(textToSay) {
   }
 }
 
+function startBgMusic() {
+  if (!bgMusic) {
+    try {
+      bgMusic = new Audio("sounds/kawai_kitsune.mp3");
+      bgMusic.loop = true;
+      bgMusic.volume = 1.0;
+    
+      bgMusic.addEventListener("error", (e) => {
+        console.error(
+          "Audio loading error detected in kawai_kitsune.mp3:",
+          bgMusic.error,
+        );
+      });
+    } catch (e) {
+      console.log("Audio initialization failed:", e);
+      return;
+    }
+  }
+
+  if (bgMusic.paused) {
+    bgMusic
+      .play()
+      .then(() => {
+        console.log("Background music started playing successfully!");
+      })
+      .catch((error) => {
+        console.log(
+          "Background music playback was restricted, waiting for user interaction:",
+          error,
+        );
+      });
+  }
+}
+
+
 // Auto-generate menu & listen for Enter key on page load
 document.addEventListener("DOMContentLoaded", () => {
   generateMenu();
+  startBgMusic();
+  
+  const unlockAudio = () => {
+    startBgMusic();
+    if (!bgMusic.paused) {
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+    }
+  };
+
+  window.addEventListener("click", unlockAudio);
+  window.addEventListener("keydown", unlockAudio);
+  window.addEventListener("touchstart", unlockAudio);
+
+  const nameInput = document.getElementById("name-input");
+  if (nameInput) {
+    nameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        startGame();
+      }
+    });
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const activeScreen = document.querySelector(".screen.active");
+    if (!activeScreen) return;
+
+    if (activeScreen.id === "screen-menu") {
+      resetToStart();
+    } else if (
+      activeScreen.id === "screen-stats" ||
+      activeScreen.id === "screen-game" ||
+      activeScreen.id === "screen-gameover" ||
+      activeScreen.id === "screen-victory"
+    ) {
+      resetToMenu();
+    }
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  generateMenu();
+  startBgMusic();
+
+  const unlockAudio = () => {
+    startBgMusic();
+    if (!bgMusic.paused) {
+      window.removeEventListener("click", unlockAudio);
+      window.removeEventListener("keydown", unlockAudio);
+      window.removeEventListener("touchstart", unlockAudio);
+    }
+  };
+
+  window.addEventListener("click", unlockAudio);
+  window.addEventListener("keydown", unlockAudio);
+  window.addEventListener("touchstart", unlockAudio);
 
   const nameInput = document.getElementById("name-input");
   if (nameInput) {
