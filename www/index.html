@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Utos ni Mama RPG</title>
     <!-- Loads the 8-bit retro font from Google Fonts -->
     <link
@@ -17,29 +20,32 @@
     <div id="game-container">
       <!-- START SCREEN -->
       <div id="screen-start" class="screen active">
-        <!-- The TV background containing the baked-in logo, Mama, and remote -->
-        <div class="tv-stage">
-          <!-- Name Input Box: Positioned over the wooden table under the TV -->
-          <div id="title-input-wrapper">
-            <input
-              type="text"
-              id="name-input"
-              placeholder="Hello, what's your name?"
-              maxlength="12"
-              autocomplete="off"
-            />
+        <!-- NEW: Wraps the stage to lock aspect ratio and allow safe mobile zooming -->
+        <div class="tv-stage-wrap">
+          <!-- The TV background containing the baked-in logo, Mama, and remote -->
+          <div class="tv-stage">
+            <!-- Name Input Box: Positioned over the wooden table under the TV -->
+            <div id="title-input-wrapper">
+              <input
+                type="text"
+                id="name-input"
+                placeholder="Hello, what's your name?"
+                maxlength="12"
+                autocomplete="off"
+              />
+            </div>
+
+            <!-- Pulsing Start Instruction positioned above the remote -->
+            <p id="remote-instruction">PRESS TO START</p>
+
+            <!-- Invisible Start Button: Mapped exactly over the drawn remote's red button -->
+            <button
+              id="remote-power-btn"
+              title="Start Quest"
+              onclick="startGame()"
+              aria-label="Start Quest"
+            ></button>
           </div>
-
-          <!-- Pulsing Start Instruction positioned above the remote -->
-          <p id="remote-instruction">PRESS TO START</p>
-
-          <!-- Invisible Start Button: Mapped exactly over the drawn remote's red button -->
-          <button
-            id="remote-power-btn"
-            title="Start Quest"
-            onclick="startGame()"
-            aria-label="Start Quest"
-          ></button>
         </div>
       </div>
 
@@ -85,19 +91,25 @@
         <!-- Heads Up Display containing level info, lives, timer, and exit button -->
         <div id="hud">
           <span id="level-title">Quest 1</span>
-          <span id="hearts-display">❤️❤️❤️</span>
 
-          <!-- Visual Liquid Timer -->
-          <div id="time-container">
-            <div id="timer-wrapper">
-              <div id="liquid-bounds">
-                <div id="time-liquid"></div>
-              </div>
-              <img src="images/timer-pic.png" id="timer-graphic" />
+          <!-- NEW: Grouped HUD right side to stack cleanly on mobile -->
+          <div id="hud-right">
+            <div id="hud-right-top">
+              <span id="hearts-display">❤️❤️❤️</span>
+              <button onclick="resetToMenu()" id="Exit">Exit</button>
             </div>
-            <span id="timer" class="pulse-anim"> 15s</span>
+
+            <!-- Visual Liquid Timer -->
+            <div id="time-container">
+              <div id="timer-wrapper">
+                <div id="liquid-bounds">
+                  <div id="time-liquid"></div>
+                </div>
+                <img src="images/timer-pic.png" id="timer-graphic" />
+              </div>
+              <span id="timer" class="pulse-anim"> 15s</span>
+            </div>
           </div>
-          <button onclick="resetToMenu()" id="Exit">Exit</button>
         </div>
 
         <!-- Pop-up Mama Reaction Container for In-Game Answers -->
@@ -105,28 +117,31 @@
           <img id="mama-feedback-img" src="" alt="Mama Reaction" />
         </div>
 
-        <!-- Animated character sprite representing the player -->
-        <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
+        <!-- NEW: Groups gameplay elements so they center dynamically on tall screens -->
+        <div id="game-content">
+          <!-- Animated character sprite representing the player -->
+          <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
 
-        <!-- Dialogue box containing the scenario and specific question -->
-        <div id="dialog-box">
-          <p id="scenario-text">Loading...</p>
-          <p id="question-text" class="highlight"></p>
-        </div>
+          <!-- Dialogue box containing the scenario and specific question -->
+          <div id="dialog-box">
+            <p id="scenario-text">Loading...</p>
+            <p id="question-text" class="highlight"></p>
+          </div>
 
-        <!-- Container for dynamically generated multiple-choice buttons -->
-        <div id="options-container"></div>
+          <!-- Container for dynamically generated multiple-choice buttons -->
+          <div id="options-container"></div>
 
-        <!-- Container for text input (used strictly for Spelling quests) -->
-        <div id="input-container">
-          <input
-            type="text"
-            id="spelling-input"
-            placeholder="Type here..."
-            autocomplete="off"
-            onkeypress="if (event.key === 'Enter') checkSpelling();"
-          />
-          <button onclick="checkSpelling()">SUBMIT</button>
+          <!-- Container for text input (used strictly for Spelling quests) -->
+          <div id="input-container">
+            <input
+              type="text"
+              id="spelling-input"
+              placeholder="Type here..."
+              autocomplete="off"
+              onkeypress="if (event.key === 'Enter') checkSpelling();"
+            />
+            <button onclick="checkSpelling()">SUBMIT</button>
+          </div>
         </div>
       </div>
 
