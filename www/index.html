@@ -4,76 +4,90 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Utos ni Mama RPG</title>
+    <!-- Loads the 8-bit retro font from Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
+    <!-- Links to the external CSS stylesheet -->
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- Main wrapper that contains the entire game UI -->
     <div id="game-container">
       <!-- START SCREEN -->
       <div id="screen-start" class="screen active">
+        <!-- The TV background containing the baked-in logo, Mama, and remote -->
         <div class="tv-stage">
-          <!-- The White Inner Screen Area of the TV -->
-          <div class="tv-screen-area">
-            <img id="title-logo" src="images/logo-name.png" alt="Utos ni Mama" />
-            <img id="title-mama" src="images/mama.png" alt="Mama" />
-            
-            <!-- Embedded Name Input -->
-            <div id="title-input-wrapper">
-              <input
-                type="text" id="name-input" placeholder="Hello, what's your name?"
-                maxlength="12" autocomplete="off"
-              />
-            </div>
+          <!-- Name Input Box: Positioned over the wooden table under the TV -->
+          <div id="title-input-wrapper">
+            <input
+              type="text"
+              id="name-input"
+              placeholder="Hello, what's your name?"
+              maxlength="12"
+              autocomplete="off"
+            />
           </div>
 
-          <!-- Remote on bottom-right table -->
-          <div id="remote-control">
-            <img id="remote-img" src="images/remote.png" alt="Remote" />
-            <!-- Red remote button layered on top -->
-             <p id="remote-instruction">PRESS TO START</p>
-            <button
-              id="remote-power-btn" title="Start Quest" 
-              onclick="startGame()" aria-label="Start Quest"
-            ></button>
-          </div>
+          <!-- Pulsing Start Instruction positioned above the remote -->
+          <p id="remote-instruction">PRESS TO START</p>
+
+          <!-- Invisible Start Button: Mapped exactly over the drawn remote's red button -->
+          <button
+            id="remote-power-btn"
+            title="Start Quest"
+            onclick="startGame()"
+            aria-label="Start Quest"
+          ></button>
         </div>
       </div>
 
-      <!-- SELECT MENU -->
+      <!-- SELECT MENU SCREEN -->
       <div id="screen-menu" class="screen">
-        <div id="top-left-controls">
-          <button onclick="playAllShuffled()" id="play-all-btn">▶ PLAY ALL</button>
-          <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">🔀 SHUFFLE</button>
+        <!-- Wrapper for the top buttons to keep them neatly aligned -->
+        <div class="menu-top-bar">
+          <div id="top-left-controls">
+            <button onclick="playAllShuffled()" id="play-all-btn">
+              ▶ PLAY ALL
+            </button>
+            <button onclick="shuffleAndReloadMenu()" id="shuffle-btn">
+              🔀 SHUFFLE
+            </button>
+          </div>
+          <button onclick="openStats()" id="stats-btn">📊 STATS</button>
         </div>
-        <button onclick="openStats()" id="stats-btn">📊 STATS</button>
 
         <h1>MGA UTOS</h1>
         <p>Choose a task from Mama:</p>
+
+        <!-- Grid container where individual quest buttons are dynamically injected -->
         <div id="quest-grid"></div>
         <button onclick="resetToStart()" class="back-btn">BACK TO TITLE</button>
       </div>
 
-      <!-- STATS SCREEN -->
+      <!-- STATS / REPORT CARD SCREEN -->
       <div id="screen-stats" class="screen">
         <h1>REPORT CARD</h1>
         <p>Session Mistake Tracker</p>
+
+        <!-- Container where player statistics are dynamically generated -->
         <div id="global-stats" class="stats-box"></div>
+
         <button onclick="clearHistory()" style="background-color: #c0392b">
           🗑️ CLEAR HISTORY
         </button>
         <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
 
-      <!-- GAME SCREEN -->
+      <!-- GAMEPLAY SCREEN -->
       <div id="screen-game" class="screen">
+        <!-- Heads Up Display containing level info, lives, timer, and exit button -->
         <div id="hud">
           <span id="level-title">Quest 1</span>
           <span id="hearts-display">❤️❤️❤️</span>
 
-          <!--Timer-->
+          <!-- Visual Liquid Timer -->
           <div id="time-container">
             <div id="timer-wrapper">
               <div id="liquid-bounds">
@@ -91,14 +105,19 @@
           <img id="mama-feedback-img" src="" alt="Mama Reaction" />
         </div>
 
+        <!-- Animated character sprite representing the player -->
         <div class="pixel-sprite bounce-anim" id="character-sprite">👩‍🦱</div>
 
+        <!-- Dialogue box containing the scenario and specific question -->
         <div id="dialog-box">
           <p id="scenario-text">Loading...</p>
           <p id="question-text" class="highlight"></p>
         </div>
 
+        <!-- Container for dynamically generated multiple-choice buttons -->
         <div id="options-container"></div>
+
+        <!-- Container for text input (used strictly for Spelling quests) -->
         <div id="input-container">
           <input
             type="text"
@@ -115,7 +134,8 @@
       <div id="screen-gameover" class="screen">
         <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
         <p id="gameover-reason"></p>
-        <img src="images/mama-gameover.png"
+        <img
+          src="images/mama-gameover.png"
           id="mama-gameover"
           onerror="this.style.display = 'none'"
         />
@@ -126,15 +146,19 @@
       <div id="screen-victory" class="screen">
         <h1>GOOD JOB, ANAK!</h1>
         <p>You survived Mama's tasks.</p>
-        <img src="images/mama-happy.png"
+        <img
+          src="images/mama-happy.png"
           id="mama-happy"
           onerror="this.style.display = 'none'"
         />
         <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
 
-      <div id="notification-box" style="display: none"></div>
+      <!-- Floating notification box for temporary alerts -->
+      <div id="notification-box" class="hidden"></div>
     </div>
+
+    <!-- Loads the external JavaScript logic file -->
     <script src="script.js"></script>
   </body>
 </html>
