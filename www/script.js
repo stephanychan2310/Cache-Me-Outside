@@ -42,7 +42,8 @@ const questionBanks = {
       options: [",", "?", "!"],
       answer: "!",
       timeLimit: 15,
-      failMsg: "Don't sound hesitant about my cooking! \n('?' gives a doubtful tone)",
+      failMsg:
+        "Don't sound hesitant about my cooking! \n('?' gives a doubtful tone)",
     },
     {
       scenario: "Asking permission to play outside:",
@@ -50,7 +51,8 @@ const questionBanks = {
       options: [",", "?", "."],
       answer: "?",
       timeLimit: 15,
-      failMsg: "Don't demand things from me! \n('!' makes it sound like an order)",
+      failMsg:
+        "Don't demand things from me! \n('!' makes it sound like an order)",
     },
     {
       scenario: "Direct quotation / Answering Mama's question:",
@@ -110,7 +112,7 @@ const questionBanks = {
       options: ["Tuesday", "tuesday"],
       answer: "Tuesday",
       timeLimit: 15,
-      failMsg: "Days of the week are always capitalized!",  
+      failMsg: "Days of the week are always capitalized!",
     },
     {
       scenario: "A driver offers you a ride home:",
@@ -126,15 +128,17 @@ const questionBanks = {
       options: ["English", "english"],
       answer: "English",
       timeLimit: 15,
-      failMsg: "Languages like English are proper nouns and must be capitalized!", 
+      failMsg:
+        "Languages like English are proper nouns and must be capitalized!",
     },
     {
-      scenario: "Don't get distracted by what you see in the plaza. Get home by 4:00 PM!",
+      scenario:
+        "Don't get distracted by what you see in the plaza. Get home by 4:00 PM!",
       text: "You run past the plaza decorated for the upcoming ____ festival.",
       options: ["Christmas", "christmas"],
       answer: "Christmas",
       timeLimit: 15,
-      failMsg: "Names of holidays are proper nouns and must be capitalized!",  
+      failMsg: "Names of holidays are proper nouns and must be capitalized!",
     },
     {
       scenario: "You are passing by a church on your way home.",
@@ -142,7 +146,7 @@ const questionBanks = {
       options: ["saint", "Saint"],
       answer: "Saint",
       timeLimit: 15,
-      failMsg: "Specific names of institutions and saints are capitalized!",  
+      failMsg: "Specific names of institutions and saints are capitalized!",
     },
     {
       scenario: "Mama is already looking for you.",
@@ -150,7 +154,8 @@ const questionBanks = {
       options: ["Five", "five"],
       answer: "five",
       timeLimit: 15,
-      failMsg: "Numbers written as words in a sentence are common words. \nThey do not need to be capitalized unless they start a sentence. ",  
+      failMsg:
+        "Numbers written as words in a sentence are common words. \nThey do not need to be capitalized unless they start a sentence. ",
     },
     {
       scenario: "You are on your way to your neighborhood.",
@@ -158,7 +163,8 @@ const questionBanks = {
       options: ["River", "river"],
       answer: "River",
       timeLimit: 15,
-      failMsg: "Specific names of bodies of water that are part of a proper geographic name are capitalized!",  
+      failMsg:
+        "Specific names of bodies of water that are part of a proper geographic name are capitalized!",
     },
     {
       scenario: "",
@@ -166,20 +172,23 @@ const questionBanks = {
       options: ["good", "Good"],
       answer: "Good",
       timeLimit: 15,
-      failMsg: "The first word inside a direct quote or dialogue is always capitalized!",  
+      failMsg:
+        "The first word inside a direct quote or dialogue is always capitalized!",
     },
   ],
 
   Spelling: [
     {
-      scenario: "Fix Mom's spelling so Aling Myrna gives you the right dairy product:",
+      scenario:
+        "Fix Mom's spelling so Aling Myrna gives you the right dairy product:",
       text: "Mom wrote: 'Buy a block of CHESE for spaghetti.' Type the correct spelling:",
       answer: "Cheese",
       timeLimit: 20,
       failMsg: "Double 'e' makes the long /ee/ sound in cheese!",
     },
     {
-      scenario: "Fix Mom's spelling so Aling Myrna doesn't give you the wrong bottle:",
+      scenario:
+        "Fix Mom's spelling so Aling Myrna doesn't give you the wrong bottle:",
       text: "Mom wrote: 'Get one bottle of VINAGAR for the dip.' Type the correct spelling:",
       answer: "Vinegar",
       timeLimit: 20,
@@ -190,56 +199,67 @@ const questionBanks = {
       text: "Mom wrote: 'Get a kilo of SHUGAR for the halo-halo.' Type the correct spelling:",
       answer: "Sugar",
       timeLimit: 20,
-      failMsg: "Even though it sounds like 'sh', sugar starts with just a single 's'!",
+      failMsg:
+        "Even though it sounds like 'sh', sugar starts with just a single 's'!",
     },
     {
-      scenario: "Fix Mom's spelling so Aling Myrna gives you Papa's morning drink:",
+      scenario:
+        "Fix Mom's spelling so Aling Myrna gives you Papa's morning drink:",
       text: "Mom wrote: 'Buy 2 packs of black COFEE for Papa'.  Type the correct spelling:",
       answer: "Coffee",
       timeLimit: 20,
-      failMsg: "Coffee double-checks its order—it has both double 'ff' and double 'ee'!",
+      failMsg:
+        "Coffee double-checks its order—it has both double 'ff' and double 'ee'!",
     },
     {
-      scenario: "Fix Mom's spelling so Aling Myrna hands you the right seasoning:",
+      scenario:
+        "Fix Mom's spelling so Aling Myrna hands you the right seasoning:",
       text: "Mom wrote: 'Get a bottle of soy SAUSE for the Adobo.'.  Type the correct spelling:",
       answer: "Sauce",
       timeLimit: 20,
-      failMsg: "The /aw/ sound in words like sauce and cause is spelled with 'au', and it ends with a soft 'ce'!",
+      failMsg:
+        "The /aw/ sound in words like sauce and cause is spelled with 'au', and it ends with a soft 'ce'!",
     },
     {
-      scenario: "Fix Mom's spelling so Aling Myrna gives you the right baking supply:",
+      scenario:
+        "Fix Mom's spelling so Aling Myrna gives you the right baking supply:",
       text: "Mom wrote: 'Buy a carton of heavy CREEM.'.  Type the correct spelling:",
       answer: "Cream",
       timeLimit: 20,
-      failMsg: "Many food words make the long /ee/ sound using 'ea' (like cream, bread, and meat)!",
+      failMsg:
+        "Many food words make the long /ee/ sound using 'ea' (like cream, bread, and meat)!",
     },
     {
       scenario: "Fix Mom's spelling so Aling Myrna sells you the pasta:",
       text: "Mom wrote: 'Buy NUDLES for the spaghetti.'.  Type the correct spelling:",
       answer: "Noodles",
       timeLimit: 20,
-      failMsg: "The long /oo/ sound in words like noodles, food, and spoon is spelled with double 'oo'!",
+      failMsg:
+        "The long /oo/ sound in words like noodles, food, and spoon is spelled with double 'oo'!",
     },
     {
       scenario: "Fix Mom's spelling so Aling Myrna finds the snack:",
       text: "Mom wrote: 'Buy a pack of BISKIT for meryenda.'.  Type the correct spelling:",
       answer: "Biscuit",
       timeLimit: 20,
-      failMsg: "English has a silent 'u' after the 'c' in biscuit—it's spelled with '-cuit' (like circuit)!",
+      failMsg:
+        "English has a silent 'u' after the 'c' in biscuit—it's spelled with '-cuit' (like circuit)!",
     },
     {
       scenario: "Fix Mom's spelling so Aling Myrna hands you the bakery item:",
       text: "Mom wrote: 'Get a loaf of dried BRED for breakfast'.  Type the correct spelling:",
       answer: "Bread",
       timeLimit: 20,
-      failMsg: "The short /e/ sound in words like bread, head, and read is often spelled with 'ea'!",
+      failMsg:
+        "The short /e/ sound in words like bread, head, and read is often spelled with 'ea'!",
     },
     {
       scenario: "Fix Mom's spelling so Aling Myrna gives you the treat:",
       text: "Mom wrote: 'Buy a bar of CHOCLATE for your younger sibling.'.  Type the correct spelling:",
       answer: "Chocolate",
       timeLimit: 20,
-      failMsg: "Don't skip the hidden middle syllable! \nChoc-o-late has an 'o' in the middle (choc-O-late)!",
+      failMsg:
+        "Don't skip the hidden middle syllable! \nChoc-o-late has an 'o' in the middle (choc-O-late)!",
     },
   ],
 
@@ -350,9 +370,20 @@ function startGame() {
   startBgMusic();
 
   const nameInput = document.getElementById("name-input");
-  currentPlayer = nameInput ? nameInput.value.trim() || "Guest" : "Guest";
+  let rawName = nameInput ? nameInput.value.trim() : "";
 
   let history = getSafeHistory();
+
+  // If blank, sequentially assign Guest1 -> GuestN based on existing records
+  if (!rawName) {
+    let guestNumber = 1;
+    while (history[`Guest${guestNumber}`]) {
+      guestNumber++;
+    }
+    currentPlayer = `Guest${guestNumber}`;
+  } else {
+    currentPlayer = rawName;
+  }
 
   if (history[currentPlayer]) {
     mistakeDatabase = history[currentPlayer];
@@ -372,7 +403,6 @@ function startGame() {
   const menuScreen = document.getElementById("screen-menu");
   if (menuScreen) menuScreen.classList.add("active");
   generateMenu();
-
 }
 
 function saveStatsToLocal() {
@@ -408,30 +438,30 @@ function renderStats(containerId) {
     const statsDiv = document.createElement("div");
     statsDiv.className = "player-stat-box hidden";
 
-  let totalMistakes = 0;
-  let html =
-    "<ul style='list-style:none; padding:0; line-height: 1.5; margin:0;'>";
+    let totalMistakes = 0;
+    let html =
+      "<ul style='list-style:none; padding:0; line-height: 1.5; margin:0;'>";
 
-  for (const [category, count] of Object.entries(stats)) {
-    const errorClass = count > 0 ? "stats-error-count has-errors" : "stats-error-count";
-    html += `<li>${category} Errors: <span class="${errorClass}">${count}</span></li>`;
-    totalMistakes += count;
-  }
+    for (const [category, count] of Object.entries(stats)) {
+      const errorClass =
+        count > 0 ? "stats-error-count has-errors" : "stats-error-count";
+      html += `<li>${category} Errors: <span class="${errorClass}">${count}</span></li>`;
+      totalMistakes += count;
+    }
 
-  html += "</ul>";
-  html += `<p class="stats-total-text">Total Mistakes: ${totalMistakes}</p>`;
-  statsDiv.innerHTML = html;
+    html += "</ul>";
+    html += `<p class="stats-total-text">Total Mistakes: ${totalMistakes}</p>`;
+    statsDiv.innerHTML = html;
 
-  btn.onclick = () => {
-    playSound();
-    statsDiv.classList.toggle("hidden");
-  };
+    btn.onclick = () => {
+      playSound();
+      statsDiv.classList.toggle("hidden");
+    };
 
     container.appendChild(btn);
     container.appendChild(statsDiv);
   }
 }
-
 
 function clearHistory() {
   playSound();
@@ -538,11 +568,29 @@ function startSpecificQuest(index) {
   loadLevel();
 }
 
+// FIXED: Play All mode now extracts EVERY question into a giant flat array and shuffles them together.
 function playAllShuffled() {
   playSound();
   isPlayAllMode = true;
-  activeQuests = shuffleArray([...quests]);
-  currentLevel = 0;
+
+  // Creates a flattened pool of all questions mapped to their respective category
+  let flatPool = [];
+  quests.forEach((q) => {
+    const bank = questionBanks[q.type];
+    if (bank) {
+      bank.forEach((question) => {
+        flatPool.push({
+          categoryMeta: q,
+          questionData: question,
+        });
+      });
+    }
+  });
+
+  // Shuffles the combined pool so questions perfectly alternate across categories
+  activeQuests = shuffleArray(flatPool);
+
+  currentLevel = 0; // In Play All mode, this now tracks the global question number (0 -> 39)
   currentQuestionIndex = 0;
   lives = maxLives;
   updateHeartsUI();
@@ -605,27 +653,23 @@ function loadLevel() {
     return;
   }
 
-  const q = activeQuests[currentLevel];
-  const bank = questionBanks[q.type];
+  let q, currentQ;
 
-  if (!bank || currentQuestionIndex >= bank.length) {
-    if (isPlayAllMode) {
-      currentLevel++;
-      currentQuestionIndex = 0;
+  // FIXED: Logic handles the newly flattened array if the player clicked "Play All"
+  if (isPlayAllMode) {
+    const mixedItem = activeQuests[currentLevel];
+    q = mixedItem.categoryMeta;
+    currentQ = mixedItem.questionData;
+  } else {
+    q = activeQuests[currentLevel];
+    const bank = questionBanks[q.type];
 
-      if (currentLevel >= activeQuests.length) {
-        winGame();
-        return;
-      }
-      loadLevel();
-      return;
-    } else {
+    if (!bank || currentQuestionIndex >= bank.length) {
       winGame();
       return;
     }
+    currentQ = bank[currentQuestionIndex];
   }
-
-  const currentQ = bank[currentQuestionIndex];
 
   const gameContainer = document.getElementById("game-container");
   if (gameContainer) {
@@ -640,7 +684,10 @@ function loadLevel() {
   }
 
   const levelTitle = document.getElementById("level-title");
-  if (levelTitle) levelTitle.innerText = `Quest ${currentLevel + 1}: ${q.type}`;
+  if (levelTitle) {
+    // Dynamically displays "Quest N: Category" matching the mixed question
+    levelTitle.innerText = `Quest ${currentLevel + 1}: ${q.type}`;
+  }
 
   const charSprite = document.getElementById("character-sprite");
   if (charSprite) charSprite.innerText = q.sprite || q.icon;
@@ -660,7 +707,7 @@ function loadLevel() {
 
   if (q.type === "Spelling") {
     if (optionsContainer) optionsContainer.classList.remove("options-visible");
-    if(inputContainer) {
+    if (inputContainer) {
       inputContainer.classList.add("input-visible");
       const spellingInput = document.getElementById("spelling-input");
       if (spellingInput) {
@@ -672,7 +719,7 @@ function loadLevel() {
     if (inputContainer) inputContainer.classList.remove("input-visible");
     if (optionsContainer) {
       optionsContainer.classList.add("options-visible");
-  
+
       const randomizedOptions = [...currentQ.options];
       shuffleArray(randomizedOptions);
 
@@ -707,10 +754,17 @@ function startTimer(seconds) {
       updateHeartsUI();
       stopSpeech();
 
-      const q = activeQuests[currentLevel];
-      const currentQ = questionBanks[q.type][currentQuestionIndex];
-      recordMistake(q.type);
+      // Ensure proper target mapping during Time's Up scenario
+      let q, currentQ;
+      if (isPlayAllMode) {
+        q = activeQuests[currentLevel].categoryMeta;
+        currentQ = activeQuests[currentLevel].questionData;
+      } else {
+        q = activeQuests[currentLevel];
+        currentQ = questionBanks[q.type][currentQuestionIndex];
+      }
 
+      recordMistake(q.type);
       playWrongSound();
 
       if (lives <= 0) {
@@ -733,7 +787,11 @@ function updateTimerUI() {
     const percentage = (timeLeft / Totaltimelimit) * 100;
 
     liquidElem.style.width = percentage + "%";
-    liquidElem.classList.remove("liquid-normal", "liquid-warning", "liquid-danger");
+    liquidElem.classList.remove(
+      "liquid-normal",
+      "liquid-warning",
+      "liquid-danger",
+    );
 
     if (percentage > 50) {
       liquidElem.style.backgroundColor = "#2ecc71";
@@ -760,19 +818,30 @@ function checkAnswer(selected) {
   stopSpeech();
   clearInterval(timer);
 
-  const q = activeQuests[currentLevel];
-  const currentQ = questionBanks[q.type][currentQuestionIndex];
+  // Maps correctly whether we are looking at the unified queue or the specific category bank
+  let q, currentQ;
+  if (isPlayAllMode) {
+    q = activeQuests[currentLevel].categoryMeta;
+    currentQ = activeQuests[currentLevel].questionData;
+  } else {
+    q = activeQuests[currentLevel];
+    currentQ = questionBanks[q.type][currentQuestionIndex];
+  }
 
   let isCorrect = false;
   if (q.type === "Capitalization") {
-    isCorrect = (selected === currentQ.answer);
+    isCorrect = selected === currentQ.answer;
   } else {
-    isCorrect = (selected.toLowerCase() === currentQ.answer.toLowerCase());
+    isCorrect = selected.toLowerCase() === currentQ.answer.toLowerCase();
   }
 
-
   if (isCorrect) {
-    currentQuestionIndex++;
+    if (isPlayAllMode) {
+      currentLevel++; // Increments the mixed array tracker directly
+    } else {
+      currentQuestionIndex++; // Increments the category-specific array
+    }
+
     showNotification("CORRECT! 🎉", () => {
       loadLevel();
     });
@@ -867,7 +936,7 @@ function startBgMusic() {
       bgMusic = new Audio("sounds/kawai_kitsune.mp3");
       bgMusic.loop = true;
       bgMusic.volume = 1.0;
-    
+
       bgMusic.addEventListener("error", (e) => {
         console.error(
           "Audio loading error detected in kawai_kitsune.mp3:",
@@ -895,12 +964,11 @@ function startBgMusic() {
   }
 }
 
-
 // Auto-generate menu & listen for Enter key on page load
 document.addEventListener("DOMContentLoaded", () => {
   generateMenu();
   startBgMusic();
-  
+
   const unlockAudio = () => {
     startBgMusic();
     if (!bgMusic.paused) {
@@ -939,32 +1007,5 @@ document.addEventListener("keydown", (e) => {
     ) {
       resetToMenu();
     }
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  generateMenu();
-  startBgMusic();
-
-  const unlockAudio = () => {
-    startBgMusic();
-    if (!bgMusic.paused) {
-      window.removeEventListener("click", unlockAudio);
-      window.removeEventListener("keydown", unlockAudio);
-      window.removeEventListener("touchstart", unlockAudio);
-    }
-  };
-
-  window.addEventListener("click", unlockAudio);
-  window.addEventListener("keydown", unlockAudio);
-  window.addEventListener("touchstart", unlockAudio);
-
-  const nameInput = document.getElementById("name-input");
-  if (nameInput) {
-    nameInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        startGame();
-      }
-    });
   }
 });
