@@ -299,9 +299,9 @@ body {
   width: max-content;
   box-sizing: border-box;
   padding: 0.4rem 0.6rem;
-  font-size: 1rem;
+  font-size: clamp(0.45rem, 1.8vw, 0.58rem);
   margin: 0 !important;
-  background-color: #7f8c8d;
+  background-color: #34495e;
   box-shadow: 3px 3px 0px #000000;
   white-space: nowrap;
   overflow: visible;
@@ -311,7 +311,7 @@ body {
 }
 
 .mute-btn-ingame:hover {
-  background-color: #95a5a6;
+  background-color: #7f8c8d;
 }
 
 #play-all-btn { 
