@@ -274,7 +274,7 @@ const questionBanks = {
     },
     {
       scenario: "Read the banana cue recipe:",
-      text: "Heat oil and melt brown sugar until caramel. Fry bananas until coated. Why do you melt the brown sugar?",
+      text: "Heat oil and melt brown sugar until it caramelizes. Fry bananas until coated. Why do you melt the brown sugar?",
       options: [
         "To coat bananas in caramel",
         "To make it salty",
@@ -292,46 +292,56 @@ const quests = [
     id: 1,
     title: "SUMAGOT KA KAY MAMA (PUNCTUATION)",
     type: "Punctuation",
-    icon: "👦",
-    sprite: "👦",
+    icon: '<img src="images/chatbox-emoji.png" class="pixel-icon">',
+    sprite: `<img src="images/chatbox-emoji.png" class="pixel-sprite">`,
   },
   {
     id: 2,
     title: "PUNTAHAN SI MAMA (CAPITALIZATION)",
     type: "Capitalization",
-    icon: "🏃",
-    sprite: "🏃",
+    icon: '<img src="images/map-emoji.png" class="pixel-icon">',
+    sprite: `<img src="images/map-emoji.png" class="pixel-sprite">`,
   },
   {
     id: 3,
     title: "UTANG KAY ALING MYRNA (SPELLING)",
     type: "Spelling",
-    icon: "🏪",
-    sprite: "🏪",
+    icon: '<img src="images/candy-emoji.png" class="pixel-icon">',
+    sprite: `<img src="images/candy-emoji.png" class="pixel-sprite">`,
   },
   {
     id: 4,
     title: "PINAGLUTO KA NI MAMA (READING)",
     type: "Reading",
-    icon: "🍲",
-    sprite: "🍲",
+    icon: '<img src="images/spoon-emoji.png" class="pixel-icon">',
+    sprite: `<img src="images/spoon-emoji.png" class="pixel-sprite">`,
   },
 ];
 
 const buttonSound = new Audio("sounds/btn-sound.mp3");
 const wrongSound = new Audio("sounds/uhoh.mp3");
+const dingSound = new Audio("sounds/correct_sound.mp3");
 
 let bgMusic = null;
 
 function playSound() {
+  if (bgMusic && bgMusic.volume === 0) return;
   if (buttonSound.src && buttonSound.src !== window.location.href) {
     buttonSound.play().catch((e) => console.log("Audio play suppressed"));
   }
 }
 
 function playWrongSound() {
+  if (bgMusic && bgMusic.volume === 0) return;
   if (wrongSound.src && wrongSound.src !== window.location.href) {
     wrongSound.play().catch((e) => console.log("Audio play suppressed"));
+  }
+}
+
+function playDingSound() {
+  if (bgMusic && bgMusic.volume === 0) return;
+  if (dingSound.src && dingSound.src !== window.location.href) {
+    dingSound.play().catch((e) => console.log("Audio play suppressed"));
   }
 }
 
@@ -362,6 +372,66 @@ function getSafeHistory() {
     console.log("Corrupted save data found and cleared!");
     localStorage.removeItem("StatsHistory");
     return {};
+  }
+}
+
+// Filters the stats list based on the search input and displays a message if no users match
+function filterStats() {
+  // Grabs the typed search text and converts it to lowercase for case-insensitive matching
+  const query = document.getElementById("search-stats").value.toLowerCase();
+  const container = document.getElementById("global-stats");
+
+  // Grabs all generated player buttons and their dropdown boxes
+  const buttons = container.getElementsByClassName("player-stat-btn");
+  const boxes = container.getElementsByClassName("player-stat-box");
+  const noUsersMsg = document.getElementById("no-users-msg");
+
+  // Tracks the number of visible buttons that match the search query
+  let matchCount = 0;
+
+  // Loops through every generated player button
+  for (let i = 0; i < buttons.length; i++) {
+    const playerName = buttons[i].innerText.toLowerCase();
+
+    // If the typed text is found inside the button's name, make the button visible
+    if (playerName.includes(query)) {
+      buttons[i].style.display = "";
+      // Increments the counter since a match was found
+      matchCount++;
+    } else {
+      // Hides the button if the name does not match the search query
+      buttons[i].style.display = "none";
+      // Forces the dropdown to close if it was previously open
+      boxes[i].classList.add("hidden");
+    }
+  }
+
+  // Evaluates the match counter after all buttons have been checked
+  if (noUsersMsg) {
+    // If 0 matches were found AND there is actually saved data, show the "No users found" message
+    if (matchCount === 0 && buttons.length > 0) {
+      noUsersMsg.classList.remove("hidden");
+    } else {
+      // Hides the message if there is at least 1 match or if the entire history is empty
+      noUsersMsg.classList.add("hidden");
+    }
+  }
+}
+// Triggers the pop-up by removing the 'hidden' class, safely overriding CSS restrictions
+function openCredits() {
+  playSound();
+  const popup = document.getElementById("credits-popup");
+  if (popup) {
+    popup.classList.remove("hidden");
+  }
+}
+
+// Dismisses the pop-up by adding the 'hidden' class back
+function closeCredits() {
+  playSound();
+  const popup = document.getElementById("credits-popup");
+  if (popup) {
+    popup.classList.add("hidden");
   }
 }
 
@@ -495,7 +565,7 @@ function updateHeartsUI() {
   heartsDisplay.innerHTML = heartsHtml;
 }
 
-function showNotification(message, callback) {
+function showNotification(message, callback, color = "#c0392b") {
   const notifBox = document.getElementById("notification-box");
   if (!notifBox) {
     if (callback) callback();
@@ -503,10 +573,11 @@ function showNotification(message, callback) {
   }
 
   notifBox.innerText = message;
-  notifBox.style.display = "block";
+  notifBox.style.backgroundColor = color;
+  notifBox.classList.remove("hidden");
 
   setTimeout(() => {
-    notifBox.style.display = "none";
+    notifBox.classList.add("hidden");
     if (callback) callback();
   }, 1500);
 }
@@ -690,7 +761,7 @@ function loadLevel() {
   }
 
   const charSprite = document.getElementById("character-sprite");
-  if (charSprite) charSprite.innerText = q.sprite || q.icon;
+  if (charSprite) charSprite.innerHTML = q.sprite || q.icon;
 
   const scenarioText = document.getElementById("scenario-text");
   if (scenarioText) scenarioText.innerText = currentQ.scenario;
@@ -795,10 +866,13 @@ function updateTimerUI() {
 
     if (percentage > 50) {
       liquidElem.style.backgroundColor = "#2ecc71";
+      if (timerElem) timerElem.classList.remove("pulse-anim");
     } else if (percentage > 25) {
       liquidElem.style.backgroundColor = "#f1c40f";
+      if (timerElem) timerElem.classList.remove("pulse-anim");
     } else {
       liquidElem.style.backgroundColor = "#e74c3c";
+      if (timerElem) timerElem.classList.add("pulse-anim");
     }
   }
 }
@@ -836,15 +910,20 @@ function checkAnswer(selected) {
   }
 
   if (isCorrect) {
+    playDingSound();
     if (isPlayAllMode) {
       currentLevel++; // Increments the mixed array tracker directly
     } else {
       currentQuestionIndex++; // Increments the category-specific array
     }
 
-    showNotification("CORRECT! 🎉", () => {
-      loadLevel();
-    });
+    showNotification(
+      "CORRECT! 🎉",
+      () => {
+        loadLevel();
+      },
+      "#2ecc71",
+    );
   } else {
     lives--;
     updateHeartsUI();
@@ -875,6 +954,22 @@ function triggerGameOver(reason) {
 
   const reasonElem = document.getElementById("gameover-reason");
   if (reasonElem) reasonElem.innerText = reason;
+  startGameOverFX();
+}
+
+function startGameOverFX() {
+  const container = document.getElementById("gameover-fx-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  for (let i = 0; i < 35; i++) {
+    const slipper = document.createElement("div");
+    slipper.className = "pixel-slipper";
+    slipper.style.left = Math.random() * 100 + "%";
+    slipper.style.animationDuration = Math.random() * 1.0 + 0.6 + "s";
+    slipper.style.animationDelay = Math.random() * 0.8 + "s";
+    container.appendChild(slipper);
+  }
 }
 
 function winGame() {
@@ -887,6 +982,37 @@ function winGame() {
 
   const victoryScreen = document.getElementById("screen-victory");
   if (victoryScreen) victoryScreen.classList.add("active");
+  startConfetti();
+}
+
+function startConfetti() {
+  const container = document.getElementById("confetti-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const colors = [
+    "#f1c40f",
+    "#2ecc71",
+    "#e74c3c",
+    "#3498db",
+    "#9b59b6",
+    "#ffffff",
+  ];
+
+  // Generates 45 pixel confetti pieces
+  for (let i = 0; i < 45; i++) {
+    const piece = document.createElement("div");
+    piece.className = "pixel-confetti";
+
+    // Random horizontal position, random colors, and staggered animation speeds
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.backgroundColor =
+      colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = Math.random() * 2 + 1.5 + "s";
+    piece.style.animationDelay = Math.random() * 1.5 + "s";
+
+    container.appendChild(piece);
+  }
 }
 
 function resetBackground() {
@@ -915,6 +1041,9 @@ function stopSpeech() {
 // Voice Function
 function mamaSpeaks(textToSay) {
   stopSpeech();
+
+  // Prevents Mama from speaking if the game is muted
+  if (bgMusic && bgMusic.volume === 0) return;
 
   if ("speechSynthesis" in window) {
     try {
@@ -964,6 +1093,22 @@ function startBgMusic() {
   }
 }
 
+function BgMusicControl() {
+  if (bgMusic) {
+    const muteBtn = document.getElementById("mute-btn");
+    const gameMuteBtn = document.getElementById("game-mute-btn");
+    if (bgMusic.volume > 0) {
+      bgMusic.volume = 0;
+      if (muteBtn) muteBtn.innerText = "🔇";
+      if (gameMuteBtn) gameMuteBtn.innerText = "🔇";
+    } else {
+      bgMusic.volume = 1.0;
+      if (muteBtn) muteBtn.innerText = "🔊";
+      if (gameMuteBtn) gameMuteBtn.innerText = "🔊";
+    }
+  }
+}
+
 // Auto-generate menu & listen for Enter key on page load
 document.addEventListener("DOMContentLoaded", () => {
   generateMenu();
@@ -988,6 +1133,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "Enter") {
         startGame();
       }
+    });
+  }
+  // Forces the spelling input to scroll into view when the mobile keyboard opens
+  const spellingInput = document.getElementById("spelling-input");
+  if (spellingInput) {
+    spellingInput.addEventListener("focus", function () {
+      // 300ms delay gives the keyboard time to fully slide up before scrolling
+      setTimeout(() => {
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
     });
   }
 });

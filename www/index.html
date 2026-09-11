@@ -30,7 +30,7 @@
                 type="text"
                 id="name-input"
                 placeholder="Hello, what's your name?"
-                maxlength="12"
+                maxlength="15"
                 autocomplete="off"
               />
             </div>
@@ -61,9 +61,174 @@
               🔀 SHUFFLE
             </button>
           </div>
-          <button onclick="openStats()" id="stats-btn">📊 STATS</button>
+          <div id="top-right-controls">
+            <button onclick="openStats()" id="stats-btn">📊 STATS</button>
+            <button onclick="BgMusicControl()" id="mute-btn">🔇</button>
+          </div>
         </div>
+        <button onclick="openCredits()" id="credits-btn">📜 CREDITS</button>
+        <div id="notification-box" class="hidden"></div>
+        <!-- Floating notification box for temporary alerts -->
+        <div id="notification-box" class="hidden"></div>
 
+        <!-- NEW: Credits Pop-up Modal. Kept outside specific screens so it overlays perfectly. Hidden by default. -->
+        <div id="credits-popup" class="hidden">
+          <h2>CREDITS</h2>
+
+          <!-- Scrollable container for the credits list to ensure it fits inside the fixed pop-up on mobile screens -->
+          <div
+            style="
+              overflow-y: auto;
+              max-height: 50vh;
+              width: 100%;
+              text-align: center;
+              margin-bottom: 15px;
+              padding: 0 10px;
+              box-sizing: border-box;
+            "
+          >
+            <!-- Individual Credit Block: Sets the name in yellow and roles in smaller white text -->
+            <div style="margin-bottom: 15px">
+              <p
+                style="
+                  color: #f1c40f;
+                  margin: 0 0 5px 0;
+                  font-size: 0.7rem;
+                  line-height: 1.4;
+                "
+              >
+                Stephany F. Chan
+              </p>
+              <p
+                style="
+                  color: #ffffff;
+                  margin: 0;
+                  font-size: 0.5rem;
+                  line-height: 1.6;
+                "
+              >
+                Co-Lead Game Developer<br />Quality Assurance Lead & App
+                Tester<br />Frontend and UI Developer
+              </p>
+            </div>
+
+            <!-- Individual Credit Block: Alane -->
+            <div style="margin-bottom: 15px">
+              <p
+                style="
+                  color: #f1c40f;
+                  margin: 0 0 5px 0;
+                  font-size: 0.7rem;
+                  line-height: 1.4;
+                "
+              >
+                Alane Niña Beatrix L. Miquela
+              </p>
+              <p
+                style="
+                  color: #ffffff;
+                  margin: 0;
+                  font-size: 0.5rem;
+                  line-height: 1.6;
+                "
+              >
+                Lead Product Researcher<br />Panel Pitch Lead<br />Associate
+                Developer
+              </p>
+            </div>
+
+            <!-- Individual Credit Block: Johanna -->
+            <div style="margin-bottom: 15px">
+              <p
+                style="
+                  color: #f1c40f;
+                  margin: 0 0 5px 0;
+                  font-size: 0.7rem;
+                  line-height: 1.4;
+                "
+              >
+                Johanna Joy A. Repomanta
+              </p>
+              <p
+                style="
+                  color: #ffffff;
+                  margin: 0;
+                  font-size: 0.5rem;
+                  line-height: 1.6;
+                "
+              >
+                UI Developer<br />Frontend Integrator<br />Associate Graphic
+                Designer
+              </p>
+            </div>
+
+            <!-- Individual Credit Block: Khent -->
+            <div style="margin-bottom: 15px">
+              <p
+                style="
+                  color: #f1c40f;
+                  margin: 0 0 5px 0;
+                  font-size: 0.7rem;
+                  line-height: 1.4;
+                "
+              >
+                Khent Denver I. Sembran
+              </p>
+              <p
+                style="
+                  color: #ffffff;
+                  margin: 0;
+                  font-size: 0.5rem;
+                  line-height: 1.6;
+                "
+              >
+                Lead Game Developer<br />Tech Lead<br />Business Strategist
+              </p>
+            </div>
+
+            <!-- Individual Credit Block: Alexa -->
+            <div style="margin-bottom: 15px">
+              <p
+                style="
+                  color: #f1c40f;
+                  margin: 0 0 5px 0;
+                  font-size: 0.7rem;
+                  line-height: 1.4;
+                "
+              >
+                Alexa Nicole Versoza
+              </p>
+              <p
+                style="
+                  color: #ffffff;
+                  margin: 0;
+                  font-size: 0.5rem;
+                  line-height: 1.6;
+                "
+              >
+                Creative Lead<br />Art Director<br />Lead Strategist
+              </p>
+            </div>
+
+            <!-- Special Thanks Block: A final shoutout grouped at the bottom -->
+            <div>
+              <p
+                style="
+                  color: #f1c40f;
+                  margin: 0 0 5px 0;
+                  font-size: 0.7rem;
+                  line-height: 1.4;
+                "
+              >
+                Special Thanks:
+              </p>
+              <p style="color: #ffffff; margin: 0; font-size: 0.5rem">Mama</p>
+            </div>
+          </div>
+
+          <!-- Button to dismiss the pop-up -->
+          <button onclick="closeCredits()">CLOSE</button>
+        </div>
         <h1>MGA UTOS</h1>
         <p>Choose a task from Mama:</p>
 
@@ -74,16 +239,34 @@
 
       <!-- STATS / REPORT CARD SCREEN -->
       <div id="screen-stats" class="screen">
+        <div class="menu-top-bar">
+          <button onclick="clearHistory()" id="clear-history-btn">
+            🗑️ CLEAR HISTORY
+          </button>
+          <button onclick="resetToMenu()" id="stats-back-btn">
+            BACK TO MENU
+          </button>
+        </div>
+
         <h1>REPORT CARD</h1>
         <p>Session Mistake Tracker</p>
+        <input
+          type="text"
+          id="search-stats"
+          placeholder="Search name..."
+          autocomplete="off"
+          onkeyup="filterStats()"
+        />
 
+        <p
+          id="no-users-msg"
+          class="hidden"
+          style="color: #e74c3c; font-size: 0.7rem; margin-top: 0"
+        >
+          No users found
+        </p>
         <!-- Container where player statistics are dynamically generated -->
         <div id="global-stats" class="stats-box"></div>
-
-        <button onclick="clearHistory()" style="background-color: #c0392b">
-          🗑️ CLEAR HISTORY
-        </button>
-        <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
 
       <!-- GAMEPLAY SCREEN -->
@@ -96,6 +279,13 @@
           <div id="hud-right">
             <div id="hud-right-top">
               <span id="hearts-display">❤️❤️❤️</span>
+              <button
+                onclick="BgMusicControl()"
+                id="game-mute-btn"
+                class="mute-btn-ingame"
+              >
+                🔇
+              </button>
               <button onclick="resetToMenu()" id="Exit">Exit</button>
             </div>
 
@@ -107,7 +297,7 @@
                 </div>
                 <img src="images/timer-pic.png" id="timer-graphic" />
               </div>
-              <span id="timer" class="pulse-anim"> 15s</span>
+              <span id="timer">15s</span>
             </div>
           </div>
         </div>
@@ -147,6 +337,7 @@
 
       <!-- GAME OVER SCREEN -->
       <div id="screen-gameover" class="screen">
+        <div id="gameover-fx-container"></div>
         <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
         <p id="gameover-reason"></p>
         <img
@@ -159,6 +350,8 @@
 
       <!-- VICTORY SCREEN -->
       <div id="screen-victory" class="screen">
+        <div id="confetti-container"></div>
+
         <h1>GOOD JOB, ANAK!</h1>
         <p>You survived Mama's tasks.</p>
         <img
