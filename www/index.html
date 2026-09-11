@@ -30,7 +30,7 @@
                 type="text"
                 id="name-input"
                 placeholder="Hello, what's your name?"
-                maxlength="12"
+                maxlength="15"
                 autocomplete="off"
               />
             </div>
@@ -61,7 +61,10 @@
               🔀 SHUFFLE
             </button>
           </div>
-          <button onclick="openStats()" id="stats-btn">📊 STATS</button>
+          <div id="top-right-controls">
+            <button onclick="openStats()" id="stats-btn">📊 STATS</button>
+            <button onclick="BgMusicControl()" id="mute-btn">🔇</button>
+          </div>
         </div>
 
         <h1>MGA UTOS</h1>
@@ -74,16 +77,19 @@
 
       <!-- STATS / REPORT CARD SCREEN -->
       <div id="screen-stats" class="screen">
+
+        <div class="menu-top-bar">
+          <button onclick="clearHistory()" id="clear-history-btn">
+            🗑️ CLEAR HISTORY
+          </button>
+          <button onclick="resetToMenu()" id="stats-back-btn">BACK TO MENU</button>
+        </div>
+
         <h1>REPORT CARD</h1>
         <p>Session Mistake Tracker</p>
 
         <!-- Container where player statistics are dynamically generated -->
         <div id="global-stats" class="stats-box"></div>
-
-        <button onclick="clearHistory()" style="background-color: #c0392b">
-          🗑️ CLEAR HISTORY
-        </button>
-        <button onclick="resetToMenu()">BACK TO MENU</button>
       </div>
 
       <!-- GAMEPLAY SCREEN -->
@@ -96,6 +102,7 @@
           <div id="hud-right">
             <div id="hud-right-top">
               <span id="hearts-display">❤️❤️❤️</span>
+              <button onclick="BgMusicControl()" id="game-mute-btn" class="mute-btn-ingame">🔇</button>
               <button onclick="resetToMenu()" id="Exit">Exit</button>
             </div>
 
@@ -107,7 +114,7 @@
                 </div>
                 <img src="images/timer-pic.png" id="timer-graphic" />
               </div>
-              <span id="timer" class="pulse-anim"> 15s</span>
+              <span id="timer">15s</span>
             </div>
           </div>
         </div>
@@ -147,6 +154,7 @@
 
       <!-- GAME OVER SCREEN -->
       <div id="screen-gameover" class="screen">
+        <div id="gameover-fx-container"></div>
         <h1 class="shake-anim">LAGOT KA KAY MAMA!</h1>
         <p id="gameover-reason"></p>
         <img
@@ -159,6 +167,8 @@
 
       <!-- VICTORY SCREEN -->
       <div id="screen-victory" class="screen">
+        <div id="confetti-container"></div>
+
         <h1>GOOD JOB, ANAK!</h1>
         <p>You survived Mama's tasks.</p>
         <img
