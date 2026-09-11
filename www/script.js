@@ -304,7 +304,7 @@ const quests = [
   },
   {
     id: 3,
-    title: "UTANG KAY ALING MYRNA (SPELLING)",
+    title: "PINABILI KA NI MAMA (SPELLING)",
     type: "Spelling",
     icon: '<img src="images/candy-emoji.png" class="pixel-icon">',
     sprite: `<img src="images/candy-emoji.png" class="pixel-sprite">`,
