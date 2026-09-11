@@ -1,0 +1,28 @@
+{
+  "background_color": "#ffffff",
+  "description": "Survive Mama's tasks and test your grammar and spelling!",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "utos-ni-mama.vercel",
+  "orientation": "portrait",
+  "scope": "/",
+  "short_name": "utos-ni-mama.vercel",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://utos-ni-mama.vercel.app/images/logo-mama.png",
+      "type": "image/png",
+      "sizes": "256x256",
+      "isSquare": true,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 256,
+      "is512x512": false,
+      "is256x256": true,
+      "is192x192": false
+    }
+  ],
+  "id": "Utos ni Mama"
+}
